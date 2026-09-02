@@ -1,0 +1,19 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
+	"root": false,
+	"extends": "//",
+
+	"linter": {
+		"domains": {
+			// noDrizzleUpdateWithoutWhere / noDrizzleDeleteWithoutWhere
+			"drizzle": "recommended"
+		},
+		"rules": {
+			"style": {
+				// Opposite of apps/http: this package has no decorators and sets
+				// verbatimModuleSyntax, so type-only imports MUST be marked.
+				"useImportType": "error"
+			}
+		}
+	}
+}

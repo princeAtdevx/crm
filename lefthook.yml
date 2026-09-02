@@ -1,0 +1,22 @@
+# Installed by the root `prepare` script (lefthook install) on pnpm install.
+# Bypass a hook with LEFTHOOK=0 git commit ... when you really must.
+min_version: 2.1.12
+
+pre-commit:
+  parallel: true
+  skip:
+    - merge
+    - rebase
+  jobs:
+    - name: biome
+      glob: "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts,json,jsonc,css,graphql}"
+      run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  jobs:
+    - name: check-types
+      run: pnpm run check-types
+    - name: biome-ci
+      run: pnpm run ci

@@ -1,20 +1,29 @@
 {
-  "name": "crm",
-  "private": true,
-  "scripts": {
-    "dev": "turbo run dev",
-    "check-types": "turbo run check-types",
-    "test": "turbo run test",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
-  },
-  "devDependencies": {
-    "prettier": "3.9.6",
-    "turbo": "^2.10.12",
-    "typescript": "7.0.2"
-  },
-  "packageManager": "pnpm@11.23.0",
-  "engines": {
-    "node": ">=24"
-  }
+	"name": "crm",
+	"private": true,
+	"scripts": {
+		"dev": "turbo run dev",
+		"check-types": "turbo run check-types",
+		"test": "turbo run test",
+		"lint": "turbo run lint",
+		"lint:fix": "turbo run lint:fix",
+		"format": "turbo run format",
+		"format:check": "turbo run format:check",
+		"check": "biome check .",
+		"check:fix": "biome check --write .",
+		"ci": "biome ci .",
+		"clean": "turbo run clean && rm -rf .turbo",
+		"clean:all": "pnpm run clean && rm -rf node_modules apps/*/node_modules packages/*/node_modules",
+		"prepare": "lefthook install"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "catalog:",
+		"lefthook": "^2.1.12",
+		"turbo": "^2.10.12",
+		"typescript": "catalog:"
+	},
+	"packageManager": "pnpm@11.23.0",
+	"engines": {
+		"node": ">=24"
+	}
 }
