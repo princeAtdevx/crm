@@ -1,0 +1,100 @@
+/*
+ * @crm/ui design system entry.
+ *
+ * Consumers import this once (`@import "@crm/ui/styles.css";`) and get
+ * Tailwind plus every token below. There is no tailwind.config.js: v4 is
+ * configured in CSS, and this file is the single source of truth.
+ */
+
+@import "tailwindcss";
+
+/*
+ * Tailwind scans the importing app's root for class names. These components
+ * live in another workspace package, so their files must be registered
+ * explicitly or every utility they use is tree-shaken away.
+ */
+@source "../src";
+
+@theme {
+	--font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
+	--font-mono: ui-monospace, Consolas, monospace;
+
+	/* Surfaces */
+	--color-bg: #ffffff;
+	--color-surface: #ffffff;
+	--color-muted: #f4f3ec;
+
+	/* Ink */
+	--color-fg: #6b6375;
+	--color-fg-strong: #08060d;
+	--color-fg-inverse: #ffffff;
+
+	/* Lines */
+	--color-border: #e5e4e7;
+	--color-ring: #aa3bff;
+
+	/* Accent */
+	--color-accent: #aa3bff;
+	--color-accent-hover: #9422f0;
+	--color-accent-soft: rgb(170 59 255 / 0.1);
+	--color-accent-border: rgb(170 59 255 / 0.5);
+
+	/* Status */
+	--color-danger: #dc2626;
+	--color-danger-soft: rgb(220 38 38 / 0.1);
+	--color-success: #16a34a;
+	--color-success-soft: rgb(22 163 74 / 0.12);
+
+	--radius-card: 0.75rem;
+
+	--shadow-card: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+}
+
+/*
+ * Dark mode flips the token values rather than the utilities, so no component
+ * needs a `dark:` variant. Media-query based to match `color-scheme` below;
+ * switch to a `.dark` class here if an explicit theme toggle is ever added.
+ */
+@layer base {
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--color-bg: #16171d;
+			--color-surface: #1f2028;
+			--color-muted: #1f2028;
+
+			--color-fg: #9ca3af;
+			--color-fg-strong: #f3f4f6;
+			--color-fg-inverse: #08060d;
+
+			--color-border: #2e303a;
+			--color-ring: #c084fc;
+
+			--color-accent: #c084fc;
+			--color-accent-hover: #d0a3fd;
+			--color-accent-soft: rgb(192 132 252 / 0.15);
+			--color-accent-border: rgb(192 132 252 / 0.5);
+
+			--color-danger: #f87171;
+			--color-danger-soft: rgb(248 113 113 / 0.15);
+			--color-success: #4ade80;
+			--color-success-soft: rgb(74 222 128 / 0.15);
+
+			--shadow-card: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -2px rgb(0 0 0 / 0.25);
+		}
+	}
+
+	:root {
+		color-scheme: light dark;
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	body {
+		margin: 0;
+		background-color: var(--color-bg);
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+	}
+}

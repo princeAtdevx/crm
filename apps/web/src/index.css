@@ -1,0 +1,5 @@
+/*
+ * Tailwind, the design tokens and the base layer all live in @crm/ui so the
+ * app and the component package cannot drift. Add app-only CSS below.
+ */
+@import "@crm/ui/styles.css";

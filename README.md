@@ -1,162 +1,47 @@
-# Turborepo starter
+# crm
 
-This Turborepo starter is maintained by the Turborepo core team.
+Turborepo monorepo, pnpm workspaces, **Bun** as the runtime.
 
-## Using this example
+## Apps and packages
 
-Run the following command:
+| Workspace          | What it is                                                    |
+| ------------------ | ------------------------------------------------------------- |
+| `apps/http`        | NestJS 12 API, run directly from TypeScript by Bun            |
+| `apps/web`         | Vite 8 + React 19 front end, also run by Bun                  |
+| `packages/db`      | `@crm/db` — Drizzle ORM schema and client, shipped as source  |
+| `packages/ui`      | `@crm/ui` — React components + Tailwind v4 tokens, as source  |
+| `packages/ts-config`| `@crm/ts-config` — the shared `tsconfig` presets             |
 
-```sh
-npx create-turbo@latest
-```
+Nothing except `apps/web` has a build step: Bun executes TypeScript directly,
+and the shared packages export raw `src/*.ts(x)` that the consumer's bundler
+compiles. That is why editing `@crm/ui` hot-reloads inside `apps/web`.
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@crm/ts-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [Biome](https://biomejs.dev/) for linting, formatting and import sorting (the only
-  linter/formatter — ESLint, Prettier and oxlint were removed). Root `biome.jsonc`
-  plus a per-workspace `biome.jsonc` that `extends: "//"`.
-- [lefthook](https://lefthook.dev/) for the pre-commit/pre-push hooks
-- A [pnpm catalog](https://pnpm.io/catalogs) in `pnpm-workspace.yaml` pinning the
-  versions shared across workspaces (typescript, @types/node, biome, vitest)
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+## Commands
 
 ```sh
-cd my-turborepo
-turbo build
+pnpm install
+pnpm dev                        # every app
+pnpm --filter @crm/web dev      # just the front end
+pnpm build                      # only apps/web produces output today
+pnpm check-types
+pnpm ci                         # biome ci . — what pre-push runs
+pnpm check:fix                  # biome check --write . across the repo
 ```
 
-Without global `turbo`, use your package manager:
+## Tooling
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm exec turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+- **pnpm** installs everything (one lockfile). Bun is the *runtime*, not the
+  package manager.
+- [Biome](https://biomejs.dev/) for linting, formatting and import sorting — the
+  only linter/formatter (ESLint, Prettier and oxlint were removed). Root
+  `biome.jsonc` plus a per-workspace `biome.jsonc` that `extends: "//"` and
+  holds only that workspace's deltas.
+- [Tailwind CSS v4](https://tailwindcss.com), configured in CSS. There is no
+  `tailwind.config.js`: `packages/ui/src/styles.css` owns the tokens, and
+  `apps/web` imports it.
+- [lefthook](https://lefthook.dev/) for the pre-commit/pre-push hooks.
+- A [pnpm catalog](https://pnpm.io/catalogs) in `pnpm-workspace.yaml` pinning
+  the versions shared across workspaces (typescript, react, biome, tailwind,
+  vitest, `@types/*`).
+- [TypeScript](https://www.typescriptlang.org/) everywhere; every workspace
+  extends a preset from `packages/ts-config` rather than repeating options.

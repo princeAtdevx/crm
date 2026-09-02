@@ -1,0 +1,9 @@
+{
+	// vite.config.ts runs under Bun, not in the browser: Node globals, no DOM.
+	"extends": "@crm/ts-config/react-app.json",
+	"compilerOptions": {
+		"lib": ["ES2023"],
+		"types": ["node"]
+	},
+	"include": ["vite.config.ts"]
+}

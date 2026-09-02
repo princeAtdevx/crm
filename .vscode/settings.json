@@ -54,6 +54,12 @@
 		"editor.tabSize": 2
 	},
 
+	// Tailwind v4 is configured in CSS, so IntelliSense needs to be pointed at
+	// the @crm/ui stylesheet rather than a tailwind.config.js. classFunctions
+	// makes completions work inside cn()/cva() calls, not just class="".
+	"tailwindCSS.experimental.configFile": "packages/ui/src/styles.css",
+	"tailwindCSS.classFunctions": ["cn", "cva", "clsx", "twMerge"],
+
 	"files.watcherExclude": {
 		"**/.turbo/**": true,
 		"**/node_modules/**": true

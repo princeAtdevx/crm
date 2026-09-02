@@ -1,0 +1,7 @@
+{
+	// Solution file only — it holds no options of its own. Editors and
+	// `tsc -b` pick up the two leaf projects below: one for browser code,
+	// one for the Node-side build config.
+	"files": [],
+	"references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+}

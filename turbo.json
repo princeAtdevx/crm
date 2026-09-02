@@ -20,6 +20,13 @@
 			"inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.sql", "!.env*"],
 			"outputs": []
 		},
+		"build": {
+			// check-types is a sibling task, not part of the build script, but
+			// the Vite template's `tsc -b && vite build` behaviour is worth
+			// keeping: no bundle is emitted from code that fails type checking.
+			"dependsOn": ["^build", "check-types"],
+			"outputs": ["dist/**"]
+		},
 		"check-types": {
 			"dependsOn": ["^check-types"],
 			"outputs": []

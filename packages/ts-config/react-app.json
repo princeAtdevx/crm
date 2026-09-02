@@ -1,0 +1,35 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "./base.json",
+	"compilerOptions": {
+		// Bundler-mode React. Distinct from react-library.json, which stays on
+		// NodeNext + declaration emit for packages consumed by tsc alone.
+		// Vite (rolldown) resolves and transpiles everything here, so the
+		// compiler's only job is type checking.
+		"jsx": "react-jsx",
+		"target": "ES2023",
+		"lib": ["ES2023", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+
+		// Every import is erased exactly as written, so type-only imports must
+		// be marked. Paired with `style.useImportType: "error"` in the Biome
+		// config of each consuming workspace.
+		"verbatimModuleSyntax": true,
+
+		// Nothing is emitted: @crm/ui ships raw .tsx and apps/web is bundled.
+		// base.json turns declaration on for tsc-built packages; off here.
+		"declaration": false,
+		"declarationMap": false,
+		"noEmit": true,
+
+		// Kept from the Vite template. base.json already supplies the bigger
+		// wins: strict + noUncheckedIndexedAccess.
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"erasableSyntaxOnly": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true
+	}
+}

@@ -1,0 +1,51 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
+	"root": false,
+	"extends": "//",
+
+	"linter": {
+		"domains": {
+			// Hook rules, JSX correctness, and the React-specific a11y checks.
+			"react": "recommended",
+			// Class-attribute rules. Biome cannot read the `@theme` block in
+			// src/styles.css, so it only reasons about stock Tailwind
+			// utilities — still worth having.
+			"tailwind": "recommended"
+		},
+		"rules": {
+			"style": {
+				// Opposite of the root (which is off for NestJS DI): this
+				// package sets verbatimModuleSyntax, so an unmarked type import
+				// is emitted as a real one and breaks the bundle.
+				"useImportType": "error"
+			},
+			"suspicious": {
+				// The root disables this for the `nest new` default. No reason
+				// to carry that into React components.
+				"noExplicitAny": "error"
+			},
+			"nursery": {
+				// Canonical Tailwind class order. `warn`, matching how the root
+				// treats every other nursery rule; `biome check --write` fixes.
+				"useSortedClasses": {
+					"level": "warn",
+					"fix": "safe",
+					"options": {
+						"functions": ["cn", "cva", "clsx", "twMerge"]
+					}
+				}
+			}
+		}
+	},
+
+	"css": {
+		"parser": {
+			// Biome 2.5 understands Tailwind v4's CSS-first syntax natively
+			// (@theme, @source, @utility, @variant, theme() ...). Without this
+			// every directive in styles.css is a parse error, which also
+			// disables formatting for the file.
+			"tailwindDirectives": true
+		},
+		"linter": { "enabled": true }
+	}
+}

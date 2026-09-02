@@ -1,0 +1,11 @@
+{
+	// Browser code. Everything else — strict, noUncheckedIndexedAccess,
+	// bundler resolution, verbatimModuleSyntax, jsx — comes from the shared
+	// preset, so this file holds only what is genuinely app-specific.
+	"extends": "@crm/ts-config/react-app.json",
+	"compilerOptions": {
+		// import.meta.env and the asset module declarations.
+		"types": ["vite/client"]
+	},
+	"include": ["src"]
+}

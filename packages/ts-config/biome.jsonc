@@ -1,5 +1,15 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
 	"root": false,
-	"extends": "//"
+	"extends": "//",
+
+	"overrides": [
+		{
+			// Every .json here is a tsconfig preset — by content, not by
+			// filename, so the root's "**/tsconfig*.json" override misses them.
+			// They carry load-bearing comments explaining each option.
+			"includes": ["*.json", "!package.json"],
+			"json": { "parser": { "allowComments": true, "allowTrailingCommas": true } }
+		}
+	]
 }

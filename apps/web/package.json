@@ -1,0 +1,38 @@
+{
+	"name": "@crm/web",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "bun --bun vite",
+		"build": "bun --bun vite build",
+		"preview": "bun --bun vite preview",
+		"check-types": "tsc -b --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"format:check": "biome format .",
+		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo node_modules/.tmp"
+	},
+	"dependencies": {
+		"@crm/ui": "workspace:*",
+		"react": "catalog:",
+		"react-dom": "catalog:"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.29.7",
+		"@biomejs/biome": "catalog:",
+		"@crm/ts-config": "workspace:*",
+		"@rolldown/plugin-babel": "^0.2.3",
+		"@tailwindcss/vite": "catalog:",
+		"@types/babel__core": "^7.20.5",
+		"@types/node": "catalog:",
+		"@types/react": "catalog:",
+		"@types/react-dom": "catalog:",
+		"@vitejs/plugin-react": "^6.1.0",
+		"babel-plugin-react-compiler": "^1.0.0",
+		"tailwindcss": "catalog:",
+		"typescript": "catalog:",
+		"vite": "^8.2.2"
+	}
+}
