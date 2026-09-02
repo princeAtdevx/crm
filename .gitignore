@@ -39,3 +39,8 @@ yarn-error.log*
 
 # TypeScript incremental build state
 *.tsbuildinfo
+
+# VS Code — share only the tooling config
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json

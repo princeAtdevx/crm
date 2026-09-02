@@ -18,6 +18,17 @@
 
 	// Neutralise Prettier/ESLint if a dev has those extensions installed, so
 	// they cannot fight Biome on save.
+	// Same hazard as biome's useImportType: VS Code's TS auto-import would write
+	// `import type { X }` for a symbol first used in a type position, erasing
+	// design:paramtypes and breaking Nest DI. This is also VS Code's default —
+	// pinned so a dev's global setting cannot turn it on.
+	"typescript.preferences.preferTypeOnlyAutoImports": false,
+	"javascript.preferences.preferTypeOnlyAutoImports": false,
+
+	// Use the repo's TypeScript, not VS Code's bundled one (catalog: ^6.0.3).
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+
 	"prettier.enable": false,
 	"eslint.enable": false,
 	"biome.enabled": true,

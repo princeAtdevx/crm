@@ -5,8 +5,17 @@
 
 	"linter": {
 		"domains": {
-			// noDrizzleUpdateWithoutWhere / noDrizzleDeleteWithoutWhere
-			"drizzle": "recommended"
+			// Biome auto-enables this domain on detecting drizzle-orm; pinned
+			// explicitly, and "all" rather than "recommended" so the nursery
+			// rules in it are included too.
+			//
+			// CAVEAT (verified 2026-09-02, biome 2.5.11 + drizzle-orm
+			// 1.0.0-rc.4): noDrizzleUpdateWithoutWhere does NOT currently fire
+			// on a deliberate `db.update(UserTable).set({...})` with no
+			// .where(), even when forced to "error" — presumably the rc type
+			// shape is not recognised. Treat this as free future coverage, not
+			// as a guard you can rely on today.
+			"drizzle": "all"
 		},
 		"rules": {
 			"style": {

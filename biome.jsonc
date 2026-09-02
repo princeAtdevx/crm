@@ -68,7 +68,8 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			// `recommended: true` is deprecated in 2.5.x; `preset` replaces it.
+			"preset": "recommended",
 
 			// `nest new` default: '@typescript-eslint/no-explicit-any': 'off'
 			"suspicious": {
