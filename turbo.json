@@ -5,6 +5,9 @@
 	"tasks": {
 		"lint": {
 			"dependsOn": ["^lint"],
+			// Biome reads none of these, so an edit to them must not bust the
+			// lint cache. $TURBO_DEFAULT$ keeps .gitignore awareness.
+			"inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.sql", "!.env*"],
 			"outputs": []
 		},
 		"lint:fix": {
@@ -14,6 +17,7 @@
 			"cache": false
 		},
 		"format:check": {
+			"inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.sql", "!.env*"],
 			"outputs": []
 		},
 		"check-types": {
