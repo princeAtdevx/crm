@@ -1,7 +1,7 @@
-import { Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 // Value import (not `import type`): with `emitDecoratorMetadata` the ctor
 // param type is emitted as a runtime reference for Nest to resolve.
 import { DrizzleDb } from '@crm/db';
+import { Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 
 /**
  * `pg.Pool` connects lazily, so a bad DATABASE_URL would let the app boot
@@ -10,12 +10,12 @@ import { DrizzleDb } from '@crm/db';
  */
 @Injectable()
 export class DatabaseHealth implements OnApplicationBootstrap {
-  private readonly logger = new Logger(DatabaseHealth.name);
+	private readonly logger = new Logger(DatabaseHealth.name);
 
-  constructor(private readonly db: DrizzleDb) {}
+	constructor(private readonly db: DrizzleDb) {}
 
-  async onApplicationBootstrap(): Promise<void> {
-    await this.db.ping();
-    this.logger.log('Database connection verified');
-  }
+	async onApplicationBootstrap(): Promise<void> {
+		await this.db.ping();
+		this.logger.log('Database connection verified');
+	}
 }

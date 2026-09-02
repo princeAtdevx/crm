@@ -1,17 +1,38 @@
 {
-  "$schema": "https://turborepo.dev/schema.json",
-  "ui": "tui",
-  "tasks": {
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
-    "test": {},
-    "dev": {
-      "cache": false,
-      "persistent": true
-    }
-  }
+	"$schema": "https://turborepo.dev/schema.json",
+	"ui": "tui",
+	"globalDependencies": ["biome.jsonc", ".editorconfig"],
+	"tasks": {
+		"lint": {
+			"dependsOn": ["^lint"],
+			// Biome reads none of these, so an edit to them must not bust the
+			// lint cache. $TURBO_DEFAULT$ keeps .gitignore awareness.
+			"inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.sql", "!.env*"],
+			"outputs": []
+		},
+		"lint:fix": {
+			"cache": false
+		},
+		"format": {
+			"cache": false
+		},
+		"format:check": {
+			"inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.sql", "!.env*"],
+			"outputs": []
+		},
+		"check-types": {
+			"dependsOn": ["^check-types"],
+			"outputs": []
+		},
+		"test": {
+			"outputs": []
+		},
+		"clean": {
+			"cache": false
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		}
+	}
 }

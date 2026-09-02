@@ -1,9 +1,19 @@
 {
-  "name": "@crm/ts-config",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@crm/ts-config",
+	"version": "0.0.0",
+	"private": true,
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"format:check": "biome format .",
+		"clean": "rm -rf .turbo"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "catalog:"
+	}
 }

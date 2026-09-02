@@ -1,0 +1,42 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
+	"root": false,
+	"extends": "//",
+
+	"linter": {
+		"domains": {
+			// vitest globals + test-specific rules (noFocusedTests, etc.)
+			"test": "recommended"
+		},
+		"rules": {
+			"style": {
+				// Load-bearing for NestJS. `constructor(private readonly db: DrizzleDb)`
+				// relies on emitDecoratorMetadata reflecting the parameter type, which
+				// only survives if DrizzleDb is a VALUE import. useImportType's autofix
+				// would rewrite it to `import type` and break DI at runtime — with tsc
+				// and the unit tests still passing.
+				"useImportType": "off",
+				// Nest's canonical DI style.
+				"noParameterProperties": "off"
+			},
+			"complexity": {
+				// Nest modules are static-only classes by design (forRoot/forRootAsync).
+				"noStaticOnlyClass": "off"
+			}
+		}
+	},
+
+	"overrides": [
+		{
+			"includes": ["**/*.spec.ts", "test/**/*.ts"],
+			"linter": {
+				"rules": {
+					"nursery": {
+						// supertest chains and expect() assertions read as floating.
+						"noFloatingPromises": "off"
+					}
+				}
+			}
+		}
+	]
+}

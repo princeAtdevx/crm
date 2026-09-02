@@ -1,0 +1,65 @@
+{
+	// Biome is the only linter/formatter in this repo. See biome.jsonc.
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	},
+
+	// Tab-4 repo-wide. detectIndentation MUST stay false, otherwise VSCode
+	// re-guesses per file and silently overrides these.
+	"editor.insertSpaces": false,
+	"editor.tabSize": 4,
+	"editor.detectIndentation": false,
+	"files.eol": "\n",
+	"files.insertFinalNewline": true,
+	"files.trimTrailingWhitespace": true,
+
+	// Neutralise Prettier/ESLint if a dev has those extensions installed, so
+	// they cannot fight Biome on save.
+	// Same hazard as biome's useImportType: VS Code's TS auto-import would write
+	// `import type { X }` for a symbol first used in a type position, erasing
+	// design:paramtypes and breaking Nest DI. This is also VS Code's default —
+	// pinned so a dev's global setting cannot turn it on.
+	"typescript.preferences.preferTypeOnlyAutoImports": false,
+	"javascript.preferences.preferTypeOnlyAutoImports": false,
+
+	// Use the repo's TypeScript, not VS Code's bundled one (catalog: ^6.0.3).
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+
+	"prettier.enable": false,
+	"eslint.enable": false,
+	"biome.enabled": true,
+
+	"[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[typescriptreact]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[javascript]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[javascriptreact]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[json]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[jsonc]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[css]": { "editor.defaultFormatter": "biomejs.biome" },
+	"[graphql]": { "editor.defaultFormatter": "biomejs.biome" },
+
+	// Biome does not format these — don't let a stray formatter claim them.
+	"[markdown]": {
+		"editor.formatOnSave": false,
+		"editor.insertSpaces": true,
+		"editor.tabSize": 2
+	},
+	"[yaml]": {
+		"editor.formatOnSave": false,
+		"editor.insertSpaces": true,
+		"editor.tabSize": 2
+	},
+
+	"files.watcherExclude": {
+		"**/.turbo/**": true,
+		"**/node_modules/**": true
+	},
+	"search.exclude": {
+		"**/.turbo": true,
+		"**/pnpm-lock.yaml": true
+	}
+}
