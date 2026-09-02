@@ -1,0 +1,51 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
+	"root": false,
+	"extends": "//",
+
+	"files": {
+		// Static assets copied verbatim into the bundle. Enabling the react
+		// domain makes Biome parse the .svg files in here as JSX and demand a
+		// <title>, which is meaningless for a favicon.
+		"includes": ["**", "!public"]
+	},
+
+	"linter": {
+		"domains": {
+			"react": "recommended",
+			"tailwind": "recommended"
+		},
+		"rules": {
+			"style": {
+				// verbatimModuleSyntax is on here (see @crm/ts-config/react-app.json),
+				// so type-only imports must be marked. The root turns this off
+				// only because of NestJS DI.
+				"useImportType": "error"
+			},
+			"suspicious": {
+				// Reverses the root's `nest new` default.
+				"noExplicitAny": "error"
+			},
+			"nursery": {
+				"useSortedClasses": {
+					"level": "warn",
+					"fix": "safe",
+					"options": {
+						"functions": ["cn", "cva", "clsx", "twMerge"]
+					}
+				}
+			}
+		}
+	},
+
+	"css": {
+		"parser": {
+			// Biome 2.5 understands Tailwind v4's CSS-first syntax natively
+			// (@theme, @source, @utility, @variant, theme() ...). Without this
+			// every directive in styles.css is a parse error, which also
+			// disables formatting for the file.
+			"tailwindDirectives": true
+		},
+		"linter": { "enabled": true }
+	}
+}

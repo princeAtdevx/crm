@@ -1,0 +1,7 @@
+{
+	"extends": "@crm/ts-config/react-app.json",
+	"compilerOptions": {
+		"types": []
+	},
+	"include": ["src"]
+}

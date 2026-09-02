@@ -13,6 +13,14 @@ catalog:
   "@vitest/coverage-v8": ^4.1.11
   typescript: ^6.0.3
   vitest: ^4.1.11
+  react: ^19.2.8
+  react-dom: ^19.2.8
+  "@types/react": ^19.2.18
+  "@types/react-dom": ^19.2.4
+  # Used by both packages/ui (the design system) and apps/web (the Vite
+  # plugin). These two must never drift apart.
+  tailwindcss: ^4.3.3
+  "@tailwindcss/vite": ^4.3.3
 
 allowBuilds:
   # Hooks are installed by the root `prepare` script instead.
