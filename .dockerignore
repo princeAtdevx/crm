@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.turbo
+**/out
+**/coverage
+**/*.tsbuildinfo
+.git
+.env
+.env.local
+.env.*.local
+Dockerfile
+.dockerignore

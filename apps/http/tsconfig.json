@@ -1,22 +1,28 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../packages/ts-config/nest.json",
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
+    // Set directly, not inherited. Bun does not follow `extends` to a bare
+    // package specifier (e.g. "@crm/ts-config/nest.json"), so inheriting these
+    // would silently drop decorator metadata and break Nest DI at runtime.
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strict": true,
+    "emitDecoratorMetadata": true,
+
+    // nest.json loosens these three; re-tighten rather than silently regress.
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Nest DI assigns constructor-injected properties.
     "strictPropertyInitialization": false,
+
+    // Bun runs the TypeScript directly, so tsc only ever type-checks.
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+
     "types": ["vitest/globals", "node"]
-  }
+  },
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "dist"]
 }
