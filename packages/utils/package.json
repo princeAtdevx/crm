@@ -12,7 +12,7 @@
 		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo"
 	},
 	"exports": {
-		"./withCatch": "./src/withCatch.util.ts"
+		".": "./src/index.ts"
 	},
 	"dependencies": {},
 	"devDependencies": {

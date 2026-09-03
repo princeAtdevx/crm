@@ -34,6 +34,7 @@ catalog:
   # plugin). These two must never drift apart.
   tailwindcss: ^4.3.3
   "@tailwindcss/vite": ^4.3.3
+  zod: ^4.4.3
 
 allowBuilds:
   # Hooks are installed by the root `prepare` script instead.
