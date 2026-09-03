@@ -42,6 +42,21 @@
 	"[css]": { "editor.defaultFormatter": "biomejs.biome" },
 	"[graphql]": { "editor.defaultFormatter": "biomejs.biome" },
 
+	// Several .json files in this repo carry load-bearing comments, and VS Code's
+	// JSON language service reports every one as "Comments are not permitted in
+	// JSON" unless the file is opened as jsonc. It ships associations for
+	// tsconfig*.json and .vscode/*.json already; these are the ones it cannot
+	// guess. Biome needs no equivalent — it treats turbo.json as JSONC by
+	// default, and biome.jsonc's `overrides` covers the rest.
+	"files.associations": {
+		"turbo.json": "jsonc",
+		// The shared tsconfig presets. Named base.json / nest.json / react-app.json
+		// rather than tsconfig.*.json, which is exactly why the built-in
+		// association misses them.
+		"**/ts-config/*.json": "jsonc",
+		"nest-cli.json": "jsonc"
+	},
+
 	// Biome does not format these — don't let a stray formatter claim them.
 	"[markdown]": {
 		"editor.formatOnSave": false,
