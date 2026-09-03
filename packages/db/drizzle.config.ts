@@ -11,7 +11,7 @@ if (!url) {
 
 export default defineConfig({
 	// Generated SQL lives outside ./src so it never enters tsc's rootDir.
-	out: './drizzle',
+	out: './drizzle/migrations',
 	schema: './src/schema/schema.ts',
 	dialect: 'postgresql',
 	dbCredentials: { url },

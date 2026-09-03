@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { createObserveModule } from '@nestjs/observe';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { type Env, validate } from './core/config/env.schema';
 import { DatabaseModule } from './core/database/database.module';
+import { HealthModule } from './modules/health/health.module';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -39,6 +38,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 			}),
 		}),
 
+		HealthModule,
+
 		ObserveModule.forRoot({
 			appKey: 'YOUR_APP_KEY',
 			appSecret: 'YOUR_APP_SECRET',
@@ -46,8 +47,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 		}),
 	],
 
-	controllers: [AppController],
+	controllers: [],
 
-	providers: [AppService],
+	providers: [],
 })
 export class AppModule {}

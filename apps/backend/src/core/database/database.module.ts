@@ -1,4 +1,5 @@
 import { DrizzleDb } from '@crm/db';
+import { withCatch } from '@crm/utils';
 import {
 	type DynamicModule,
 	Global,
@@ -67,10 +68,12 @@ export class DatabaseModule implements OnApplicationShutdown {
 	async onApplicationShutdown(signal?: string): Promise<void> {
 		DatabaseModule.logger.log(`Closing database pool (signal: ${signal ?? 'n/a'})`);
 
-		try {
-			await this.db.close();
-		} catch (err) {
-			DatabaseModule.logger.error('Error closing database pool', err as Error);
+		// A failed close must not abort shutdown -- the process is going away
+		// regardless, and throwing here would mask the original signal.
+		const [error] = await withCatch(this.db.close());
+
+		if (error) {
+			DatabaseModule.logger.error('Error closing database pool', error);
 		}
 	}
 }
