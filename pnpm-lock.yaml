@@ -228,6 +228,8 @@ importers:
         specifier: 'catalog:'
         version: 2.5.11
 
+  packages/types: {}
+
   packages/ui:
     dependencies:
       class-variance-authority:
