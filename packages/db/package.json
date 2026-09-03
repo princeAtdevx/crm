@@ -22,7 +22,7 @@
 		"db:up": "drizzle-kit up",
 		"db:drop": "drizzle-kit drop",
 		"db:studio": "drizzle-kit studio",
-		"db:seed": "tsx src/seed.ts"
+		"db:seed": "tsx src/seed/seed.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",

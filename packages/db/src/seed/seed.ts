@@ -10,8 +10,8 @@
  */
 import { config } from 'dotenv';
 import { sql } from 'drizzle-orm';
-import { createDrizzleClient } from './client';
-import { UserTable } from './schema/schema';
+import { createDrizzleClient } from '../client';
+import { UserTable } from '../schema/schema';
 
 // Same file and precedence as drizzle.config.ts.
 config({ path: ['../../.env.local', '../../.env'] });

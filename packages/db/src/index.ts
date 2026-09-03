@@ -2,7 +2,7 @@
 // `drizzle-orm` dependency (which could drift from the version used here).
 export { and, asc, desc, eq, inArray, or, sql } from 'drizzle-orm';
 export { createDrizzleClient, type DrizzleClient } from './client';
-export { DrizzleDb } from './drizzle.service';
+export { DrizzleDb } from './drizzle.init';
 
 export { Model } from './models/base.model';
 export { UserModel } from './models/user.model';
