@@ -5,7 +5,7 @@ import { AppModule } from './../src/app.module';
 
 /**
  * Boots the real AppModule, so it needs a reachable database: NODE_ENV=test
- * (set by vitest) makes ConfigModule read apps/http/.env.test first, which
+ * (set by vitest) makes ConfigModule read apps/backend/.env.test first, which
  * points at the throwaway `crm_test` database. Run `pnpm --filter @crm/db
  * db:migrate` against it once before running this suite.
  */

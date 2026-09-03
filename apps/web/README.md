@@ -10,7 +10,7 @@ pnpm --filter @crm/web preview
 
 Dependencies are installed by **pnpm** (one lockfile, one catalog for the
 whole monorepo); Bun is only the runtime that executes Vite, matching
-`apps/http`.
+`apps/backend`.
 
 - UI components and every design token come from [`@crm/ui`](../../packages/ui)
   — `src/index.css` is a single `@import` of its stylesheet.

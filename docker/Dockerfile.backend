@@ -1,0 +1,138 @@
+# syntax=docker/dockerfile:1.7
+#
+# Production image for apps/backend.
+#
+# The layout of this file is dictated by one fact about the repo: pnpm installs,
+# Bun runs. Versions resolve through pnpm's `catalog:` protocol so `bun install`
+# is not a substitute, but the app itself has no build step -- Bun executes
+# src/main.ts as TypeScript, and its workspace dep @crm/db is consumed as raw
+# source (`exports` -> ./src/index.ts).
+#
+# Bun is the only base image here, toolchain stages included. That requires Bun
+# >= 1.4.0: pnpm 11 imports `node:sqlite`, which earlier Bun does not implement
+# ("No such built-in module: node:sqlite" on first invocation). Do not downgrade
+# the base below 1.4.0 without also reverting these stages to a Node base.
+#
+# Build from the repo ROOT, not from docker/:
+#   docker build -f docker/Dockerfile.backend -t crm-backend .
+
+ARG BUN_VERSION=1.4.0
+
+# ---------------------------------------------------------------------------
+# Stage 0: build toolchain, shared by the prune and install stages.
+# ---------------------------------------------------------------------------
+# Nothing installed here reaches the final image: these stages are discarded,
+# and only node_modules and pruned source are copied forward.
+FROM oven/bun:${BUN_VERSION}-slim AS base
+ENV PNPM_HOME=/pnpm \
+    CI=true \
+    PATH=/root/.bun/bin:$PATH
+WORKDIR /app
+
+# Both pins are duplicated from the repo (root `packageManager` and the turbo
+# devDependency). The pruner stage asserts they still match -- see below.
+RUN bun add -g pnpm@11.23.0 turbo@2.10.12
+
+# ---------------------------------------------------------------------------
+# Stage 1: prune the monorepo down to backend and its dependency subgraph.
+# ---------------------------------------------------------------------------
+# The payoff is layer caching: the pruned lockfile means the install below is
+# invalidated only when *backend's* dependencies change, not when apps/web's do.
+FROM base AS pruner
+COPY . .
+
+# Fail loudly on pin drift rather than silently installing with a pnpm that
+# differs from every developer's. corepack would read `packageManager` itself;
+# `bun add -g` cannot, so this stands in for it.
+RUN grep -q '"packageManager": "pnpm@11.23.0"' package.json \
+    || { echo "ERROR: root packageManager no longer matches the pnpm pinned in this Dockerfile"; exit 1; }
+
+# Positional arg, not `--scope` -- the latter is deprecated in turbo 2.x and
+# conflicts with this form. No `--production`: it would drop workspace packages
+# reachable only via devDependencies, i.e. packages/ts-config, which
+# apps/backend/tsconfig.json extends by relative path. devDependencies are
+# dropped at install time instead.
+RUN turbo prune backend --docker
+
+# ---------------------------------------------------------------------------
+# Stage 2: install production dependencies against the pruned lockfile.
+# ---------------------------------------------------------------------------
+FROM base AS deps
+
+# Manifests only, so editing source does not bust the install layer. out/json/
+# carries everything this needs: the pruned pnpm-lock.yaml, .npmrc, and
+# pnpm-workspace.yaml -- the last being mandatory rather than incidental, since
+# the `catalog:` version entries live there and install fails without it.
+COPY --from=pruner /app/out/json/ .
+
+# --prod drops turbo/biome/vitest/drizzle-kit/tsx; everything backend imports at
+# runtime (@nestjs/*, drizzle-orm, pg, zod, rxjs) is a real dependency.
+# --ignore-scripts skips the root `prepare` -> `lefthook install`.
+# No --filter needed: the tree is already pruned.
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prod --ignore-scripts
+
+# ---------------------------------------------------------------------------
+# Stage 3: static tini, for use as PID 1 in the runtime stage.
+# ---------------------------------------------------------------------------
+FROM alpine:3.21 AS tini
+RUN apk add --no-cache tini-static
+
+# ---------------------------------------------------------------------------
+# Stage 4: runtime.
+# ---------------------------------------------------------------------------
+# -slim (Debian) over -alpine: glibc avoids musl surprises in pg and Nest, for
+# about 23MB.
+FROM oven/bun:${BUN_VERSION}-slim AS runtime
+
+# tini is PID 1, and it is load-bearing. Measured with Bun 1.4.0 as PID 1
+# instead: the pool drain still ran, but Bun then failed to exit and Docker had
+# to SIGKILL it (exit 137). With tini the container exits 143 immediately. That
+# is the standard PID-1 problem -- a process with no init parent gets no default
+# SIGTERM disposition. `docker run --init` supplies the same thing externally.
+#
+# Taken from Alpine rather than `apt-get install tini`: Debian's mirror
+# intermittently fails `apt-get update` here with a by-hash Hash Sum mismatch,
+# and tini-static is a fully static binary, so it runs on this glibc image fine.
+COPY --from=tini /sbin/tini-static /usr/local/bin/tini
+
+# WORKDIR must be /app in every stage. pnpm's node_modules is a tree of
+# *relative* symlinks into /app/node_modules/.pnpm, and COPY preserves symlinks
+# without dereferencing them -- a path mismatch across stages would silently
+# produce dangling links with no build-time error.
+WORKDIR /app
+
+# The root node_modules must be copied whole: it contains .pnpm, the actual
+# package store that every per-package symlink points into.
+COPY --from=deps --chown=bun:bun /app/node_modules ./node_modules
+COPY --from=deps --chown=bun:bun /app/apps/backend/node_modules ./apps/backend/node_modules
+COPY --from=deps --chown=bun:bun /app/packages/db/node_modules ./packages/db/node_modules
+
+# Source last, so a code change invalidates only this thin layer. out/full/
+# carries apps/backend + packages/db + packages/ts-config sources, the root
+# package.json, pnpm-workspace.yaml and turbo.json.
+COPY --from=pruner --chown=bun:bun /app/out/full/ .
+
+# NODE_ENV=production also flips `ignoreEnvFile: true` in app.module.ts, so no
+# .env is read in-container -- DATABASE_URL must be injected as a real env var.
+# It is the only variable without a default in src/core/config/env.schema.ts.
+ENV NODE_ENV=production \
+    PORT=3000
+
+# app.module.ts resolves env file paths relative to process.cwd() and expects
+# that to be apps/backend.
+WORKDIR /app/apps/backend
+
+# uid 1000, already present in oven/bun images.
+USER bun
+
+EXPOSE 3000
+
+# There is no /health route; GET / is what the app exposes. Using `bun -e`
+# avoids installing curl.
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD bun -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+# Exec form is required: shell form would put /bin/sh between tini and Bun.
+ENTRYPOINT ["/usr/local/bin/tini", "--"]
+CMD ["bun", "src/main.ts"]

@@ -10,3 +10,4 @@
 .env.*.local
 Dockerfile
 .dockerignore
+**/.env.test

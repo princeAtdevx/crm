@@ -19,7 +19,7 @@
 		},
 		"rules": {
 			"style": {
-				// Opposite of apps/http: this package has no decorators and sets
+				// Opposite of apps/backend: this package has no decorators and sets
 				// verbatimModuleSyntax, so type-only imports MUST be marked.
 				"useImportType": "error"
 			}

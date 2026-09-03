@@ -2,6 +2,19 @@ packages:
   - "apps/*"
   - "packages/*"
 
+# Fail the install when the running Node is outside `engines.node`, instead of
+# only warning. `engines.pnpm` is enforced by pnpm by default; Node is not.
+#
+# The key is `engineStrict` -- the camelCase of .npmrc's `engine-strict`, which
+# pnpm 11 no longer reads (.npmrc is auth/registry only now). `strictEngines`
+# looks right but is silently ignored, so pnpm warns about the unknown key and
+# lets a bad Node version through.
+#
+# `engines.bun` is validated by nothing -- not pnpm, not `bun run` -- so the
+# Bun floor is asserted at boot by
+# apps/backend/src/core/config/runtime.guard.ts instead.
+engineStrict: true
+
 # Single source of truth for versions shared across workspaces. Consumers
 # declare `"typescript": "catalog:"` etc. Safe here because every package is
 # private and never published.
