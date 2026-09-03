@@ -39,6 +39,9 @@ catalogs:
     vitest:
       specifier: ^4.1.11
       version: 4.1.11
+    zod:
+      specifier: ^4.4.3
+      version: 4.4.3
 
 importers:
 
@@ -84,7 +87,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.2
       zod:
-        specifier: ^4.4.3
+        specifier: 'catalog:'
         version: 4.4.3
     devDependencies:
       '@biomejs/biome':
@@ -229,6 +232,10 @@ importers:
         version: 2.5.11
 
   packages/types:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
     devDependencies:
       '@crm/ts-config':
         specifier: workspace:*

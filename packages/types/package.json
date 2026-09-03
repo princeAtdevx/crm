@@ -11,6 +11,12 @@
 		"format:check": "biome format .",
 		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo"
 	},
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"dependencies": {
+		"zod": "catalog:"
+	},
 	"devDependencies": {
 		"@crm/ts-config": "workspace:*",
 		"@types/node": "catalog:"
