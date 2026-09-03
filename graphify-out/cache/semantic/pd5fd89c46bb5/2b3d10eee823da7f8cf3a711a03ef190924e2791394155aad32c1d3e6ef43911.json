@@ -1,0 +1,28 @@
+{
+	"nodes": [
+		{
+			"id": "claude_skills_improve_codebase_architecture_agents_openai",
+			"label": "Improve Codebase Architecture agent config",
+			"file_type": "document",
+			"source_file": ".claude/skills/improve-codebase-architecture/agents/openai.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_skills_improve_codebase_architecture_skill",
+			"target": "claude_skills_improve_codebase_architecture_agents_openai",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": ".claude/skills/improve-codebase-architecture/agents/openai.yaml",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

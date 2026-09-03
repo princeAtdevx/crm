@@ -1,0 +1,231 @@
+{
+	"nodes": [
+		{
+			"id": "pnpm_workspace_catalog",
+			"label": "pnpm-workspace.yaml catalog",
+			"file_type": "code",
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "pnpm_workspace_biome",
+			"label": "@biomejs/biome catalog entry (2.5.11, exact)",
+			"file_type": "code",
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "pnpm_workspace_tailwindcss",
+			"label": "tailwindcss / @tailwindcss/vite catalog entry",
+			"file_type": "code",
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "pnpm_workspace_react",
+			"label": "react / react-dom catalog entry",
+			"file_type": "code",
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "pnpm_workspace_typescript",
+			"label": "typescript catalog entry",
+			"file_type": "code",
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "pnpm_workspace_vitest",
+			"label": "vitest / @vitest/coverage-v8 catalog entry",
+			"file_type": "code",
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "pnpm_workspace_allowbuilds_lefthook",
+			"label": "allowBuilds: lefthook false (hooks installed via prepare script)",
+			"file_type": "rationale",
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "pnpm_workspace_catalog",
+			"target": "pnpm_workspace_biome",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_catalog",
+			"target": "pnpm_workspace_tailwindcss",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_catalog",
+			"target": "pnpm_workspace_react",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_catalog",
+			"target": "pnpm_workspace_typescript",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_catalog",
+			"target": "pnpm_workspace_vitest",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_catalog",
+			"target": "pnpm_workspace_allowbuilds_lefthook",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_allowbuilds_lefthook",
+			"target": "readme_lefthook",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_biome",
+			"target": "readme_biome",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_tailwindcss",
+			"target": "readme_tailwindcss",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_tailwindcss",
+			"target": "packages_ui_readme_crm_ui",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.85,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_tailwindcss",
+			"target": "apps_web_readme_crm_web",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.85,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_react",
+			"target": "apps_web_readme_react",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "pnpm_workspace_typescript",
+			"target": "readme_typescript",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "pnpm-workspace.yaml",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": [
+		{
+			"id": "hyperedge_pnpm_catalog_pinned_versions",
+			"label": "pnpm catalog shared/pinned dependency versions",
+			"nodes": [
+				"pnpm_workspace_catalog",
+				"pnpm_workspace_biome",
+				"pnpm_workspace_tailwindcss",
+				"pnpm_workspace_react",
+				"pnpm_workspace_typescript",
+				"pnpm_workspace_vitest"
+			],
+			"relation": "form",
+			"confidence": "EXTRACTED",
+			"confidence_score": 0.9,
+			"source_file": "pnpm-workspace.yaml"
+		}
+	]
+}

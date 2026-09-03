@@ -1,0 +1,60 @@
+{
+	"nodes": [
+		{
+			"id": "claude_skills_writing_shape_skill",
+			"label": "Writing Shape skill",
+			"file_type": "document",
+			"source_file": ".claude/skills/writing-shape/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_shape_grounding_concept",
+			"label": "Grounding (writing-shape)",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-shape/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_shape_block_concept",
+			"label": "Block (writing-shape)",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-shape/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_skills_writing_shape_skill",
+			"target": "writing_shape_grounding_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-shape/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_writing_shape_skill",
+			"target": "writing_shape_block_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-shape/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

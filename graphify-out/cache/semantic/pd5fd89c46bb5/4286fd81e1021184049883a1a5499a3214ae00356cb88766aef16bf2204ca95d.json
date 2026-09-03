@@ -1,0 +1,142 @@
+{
+	"nodes": [
+		{
+			"id": "lefthook_pre_commit",
+			"label": "pre-commit hook stage",
+			"file_type": "code",
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "lefthook_pre_push",
+			"label": "pre-push hook stage",
+			"file_type": "code",
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "lefthook_biome_job",
+			"label": "biome job (pre-commit)",
+			"file_type": "code",
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "lefthook_check_types_job",
+			"label": "check-types job (pre-push)",
+			"file_type": "code",
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "lefthook_biome_ci_job",
+			"label": "biome-ci job (pre-push)",
+			"file_type": "code",
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "lefthook_pre_commit",
+			"target": "lefthook_biome_job",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "lefthook_pre_push",
+			"target": "lefthook_check_types_job",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "lefthook_pre_push",
+			"target": "lefthook_biome_ci_job",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "lefthook_biome_job",
+			"target": "readme_biome",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "lefthook_biome_ci_job",
+			"target": "readme_biome",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "lefthook_pre_push",
+			"target": "readme_typescript",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.85,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "readme_lefthook",
+			"target": "lefthook_pre_commit",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "readme_lefthook",
+			"target": "lefthook_pre_push",
+			"relation": "conceptually_related_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.95,
+			"source_file": "lefthook.yml",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

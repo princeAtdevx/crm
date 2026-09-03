@@ -1,0 +1,38 @@
+{
+	"nodes": [
+		{
+			"id": "claude_skills_prototype_logic",
+			"label": "Logic Prototype guide",
+			"file_type": "document",
+			"source_file": ".claude/skills/prototype/LOGIC.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_skills_prototype_logic",
+			"target": "claude_skills_prototype_ui",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/prototype/LOGIC.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_prototype_logic",
+			"target": "claude_skills_prototype_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/prototype/LOGIC.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

@@ -1,0 +1,17 @@
+{
+	"nodes": [
+		{
+			"id": "teach_agents_openai",
+			"label": "Teach openai.yaml config",
+			"file_type": "code",
+			"source_file": ".claude/skills/teach/agents/openai.yaml",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [],
+	"hyperedges": []
+}

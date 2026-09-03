@@ -1,0 +1,63 @@
+{
+	"nodes": [
+		{
+			"id": "claude_md",
+			"label": "orra repo CLAUDE.md",
+			"file_type": "document",
+			"source_file": "CLAUDE.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_md",
+			"target": "docs_agents_issue_tracker_doc",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "CLAUDE.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_md",
+			"target": "docs_agents_triage_labels_doc",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "CLAUDE.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_md",
+			"target": "docs_agents_domain_doc",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "CLAUDE.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": [
+		{
+			"id": "tracker_config_bundle",
+			"label": "Agent-skills tracker configuration bundle referenced from CLAUDE.md",
+			"nodes": [
+				"claude_md",
+				"docs_agents_issue_tracker_doc",
+				"docs_agents_triage_labels_doc",
+				"docs_agents_domain_doc"
+			],
+			"relation": "form",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": "CLAUDE.md"
+		}
+	]
+}

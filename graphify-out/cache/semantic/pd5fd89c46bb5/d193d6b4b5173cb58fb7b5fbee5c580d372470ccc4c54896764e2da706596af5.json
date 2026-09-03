@@ -1,0 +1,651 @@
+{
+	"nodes": [
+		{
+			"id": "claude_skills_ask_matt_skill",
+			"label": "Ask Matt Skill",
+			"file_type": "document",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_grilling_skill",
+			"label": "Grilling (interview primitive)",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_grill_with_docs_skill",
+			"label": "Grill With Docs",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_prototype_skill",
+			"label": "Prototype",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_to_spec_skill",
+			"label": "To Spec",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_to_tickets_skill",
+			"label": "To Tickets",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_implement_skill",
+			"label": "Implement",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_tdd_skill",
+			"label": "TDD",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_triage_skill",
+			"label": "Triage",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_improve_codebase_architecture_skill",
+			"label": "Improve Codebase Architecture",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_wayfinder_skill",
+			"label": "Wayfinder",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_resolving_merge_conflicts_skill",
+			"label": "Resolving Merge Conflicts",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_research_skill",
+			"label": "Research",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_to_questionnaire_skill",
+			"label": "To Questionnaire",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_wizard_skill",
+			"label": "Wizard",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_wait_what_skill",
+			"label": "Wait What",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_teach_skill",
+			"label": "Teach",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_writing_for_agents_skill",
+			"label": "Writing For Agents",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_setup_matt_pocock_skills_skill",
+			"label": "Setup Matt Pocock Skills",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_grill_with_docs_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_grill_me_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_prototype_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_claude_handoff_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_to_spec_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_to_tickets_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_implement_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_tdd_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_code_review_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_triage_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_diagnosing_bugs_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_improve_codebase_architecture_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_wayfinder_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_domain_modeling_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_codebase_design_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_ask_matt_phase_boundaries",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_resolving_merge_conflicts_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_research_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_to_questionnaire_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_wizard_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_wait_what_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_teach_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_writing_for_agents_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_setup_matt_pocock_skills_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_grilling_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_grill_me_skill",
+			"target": "claude_skills_grilling_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_grill_with_docs_skill",
+			"target": "claude_skills_grilling_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_triage_skill",
+			"target": "claude_skills_implement_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_diagnosing_bugs_skill",
+			"target": "claude_skills_improve_codebase_architecture_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_wayfinder_skill",
+			"target": "claude_skills_to_spec_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_improve_codebase_architecture_skill",
+			"target": "claude_skills_grill_with_docs_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_improve_codebase_architecture_skill",
+			"target": "claude_skills_codebase_design_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_tdd_skill",
+			"target": "claude_skills_codebase_design_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_implement_skill",
+			"target": "claude_skills_tdd_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_implement_skill",
+			"target": "claude_skills_code_review_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_prototype_skill",
+			"target": "claude_skills_claude_handoff_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_research_skill",
+			"target": "claude_skills_grill_with_docs_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_to_questionnaire_skill",
+			"target": "claude_skills_grill_me_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_to_questionnaire_skill",
+			"target": "claude_skills_grill_with_docs_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_to_questionnaire_skill",
+			"target": "claude_skills_to_spec_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_wait_what_skill",
+			"target": "claude_skills_grill_with_docs_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_skill",
+			"target": "claude_skills_ask_matt_phase_boundaries_smart_zone",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": [
+		{
+			"id": "ask_matt_main_flow",
+			"label": "Idea-to-Ship Main Flow",
+			"nodes": [
+				"claude_skills_grill_with_docs_skill",
+				"claude_skills_to_spec_skill",
+				"claude_skills_to_tickets_skill",
+				"claude_skills_implement_skill"
+			],
+			"relation": "participate_in",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/SKILL.md"
+		}
+	]
+}

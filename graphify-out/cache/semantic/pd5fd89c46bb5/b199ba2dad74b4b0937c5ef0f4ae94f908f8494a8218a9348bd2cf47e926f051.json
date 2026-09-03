@@ -1,0 +1,49 @@
+{
+	"nodes": [
+		{
+			"id": "to_spec_skill",
+			"label": "To Spec SKILL.md",
+			"file_type": "document",
+			"source_file": ".claude/skills/to-spec/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "setup_matt_pocock_skills_concept",
+			"label": "/setup-matt-pocock-skills command (issue tracker + triage label vocabulary setup)",
+			"file_type": "concept",
+			"source_file": ".claude/skills/to-spec/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "to_spec_skill",
+			"target": "setup_matt_pocock_skills_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/to-spec/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "to_spec_skill",
+			"target": "to_tickets_skill",
+			"relation": "semantically_similar_to",
+			"confidence": "INFERRED",
+			"confidence_score": 0.75,
+			"source_file": ".claude/skills/to-spec/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

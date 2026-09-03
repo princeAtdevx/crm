@@ -1,0 +1,69 @@
+{
+	"nodes": [
+		{
+			"id": "to_tickets_skill",
+			"label": "To Tickets SKILL.md",
+			"file_type": "document",
+			"source_file": ".claude/skills/to-tickets/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "to_tickets_wide_refactor_concept",
+			"label": "Wide refactor / expand-contract pattern",
+			"file_type": "concept",
+			"source_file": ".claude/skills/to-tickets/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "to_tickets_skill",
+			"target": "setup_matt_pocock_skills_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/to-tickets/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "to_tickets_skill",
+			"target": "to_tickets_wide_refactor_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/to-tickets/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "to_tickets_wide_refactor_concept",
+			"target": "tdd_seam_concept",
+			"relation": "conceptually_related_to",
+			"confidence": "AMBIGUOUS",
+			"confidence_score": 0.2,
+			"source_file": ".claude/skills/to-tickets/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": [
+		{
+			"id": "spec_to_tickets_pipeline",
+			"label": "Conversation-to-spec-to-tickets synthesis pipeline gated on issue tracker setup",
+			"nodes": ["to_spec_skill", "to_tickets_skill", "setup_matt_pocock_skills_concept"],
+			"relation": "participate_in",
+			"confidence": "EXTRACTED",
+			"confidence_score": 0.85,
+			"source_file": ".claude/skills/to-tickets/SKILL.md"
+		}
+	]
+}

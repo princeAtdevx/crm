@@ -1,0 +1,38 @@
+{
+	"nodes": [
+		{
+			"id": "teach_learning_record_format",
+			"label": "Learning Record Format",
+			"file_type": "document",
+			"source_file": ".claude/skills/teach/LEARNING-RECORD-FORMAT.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "teach_learning_record_format",
+			"target": "teach_mission_format",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/teach/LEARNING-RECORD-FORMAT.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "teach_learning_record_format",
+			"target": "teach_zpd_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/teach/LEARNING-RECORD-FORMAT.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

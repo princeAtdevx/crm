@@ -1,0 +1,28 @@
+{
+	"nodes": [
+		{
+			"id": "claude_skills_writing_for_agents_skill_mechanics",
+			"label": "Skill Mechanics reference (writing-for-agents)",
+			"file_type": "document",
+			"source_file": ".claude/skills/writing-for-agents/SKILL-MECHANICS.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_skills_writing_for_agents_skill_mechanics",
+			"target": "claude_skills_writing_for_agents_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL-MECHANICS.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

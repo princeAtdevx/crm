@@ -1,0 +1,93 @@
+{
+	"nodes": [
+		{
+			"id": "claude_skills_ask_matt_phase_boundaries",
+			"label": "Phase Boundaries Doc",
+			"file_type": "document",
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "claude_skills_ask_matt_phase_boundaries_phase_boundary",
+			"label": "Phase Boundary Decision Tree",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null,
+			"rationale": "Five options ordered cheapest/most-precise first (Continue, /clear, /handoff, Subagent, /compact) so the decision is made only at phase boundaries, never mid-phase; compacting mid-phase makes the agent lose the thread."
+		},
+		{
+			"id": "claude_skills_ask_matt_phase_boundaries_primary_secondary_source",
+			"label": "Primary vs Secondary Source",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null,
+			"rationale": "Every move except Continue turns a primary source (the session as it happened) into a lossier secondary source; you only pay that lossiness when staying costs more than it saves."
+		},
+		{
+			"id": "claude_skills_ask_matt_phase_boundaries_smart_zone",
+			"label": "Smart Zone",
+			"file_type": "concept",
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"source_url": "https://www.aihero.dev/ai-coding-dictionary/smart-zone",
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_skills_ask_matt_phase_boundaries",
+			"target": "claude_skills_ask_matt_phase_boundaries_phase_boundary",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_phase_boundaries_phase_boundary",
+			"target": "claude_skills_claude_handoff_skill",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_phase_boundaries_phase_boundary",
+			"target": "claude_skills_ask_matt_phase_boundaries_smart_zone",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_ask_matt_phase_boundaries_phase_boundary",
+			"target": "claude_skills_ask_matt_phase_boundaries_primary_secondary_source",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/ask-matt/PHASE-BOUNDARIES.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}

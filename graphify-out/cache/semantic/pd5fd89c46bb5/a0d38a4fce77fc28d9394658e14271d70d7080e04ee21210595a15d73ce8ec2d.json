@@ -1,0 +1,164 @@
+{
+	"nodes": [
+		{
+			"id": "claude_skills_writing_for_agents_skill",
+			"label": "Writing for Agents skill",
+			"file_type": "document",
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_for_agents_context_pointer_concept",
+			"label": "Context pointer",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_for_agents_context_load_concept",
+			"label": "Context load",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_for_agents_cognitive_load_concept",
+			"label": "Cognitive load",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_for_agents_information_hierarchy_concept",
+			"label": "Information hierarchy",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_for_agents_leading_word_concept",
+			"label": "Leading word",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		},
+		{
+			"id": "writing_for_agents_progressive_disclosure_concept",
+			"label": "Progressive disclosure",
+			"file_type": "concept",
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"source_url": null,
+			"captured_at": null,
+			"author": null,
+			"contributor": null
+		}
+	],
+	"edges": [
+		{
+			"source": "claude_skills_writing_for_agents_skill",
+			"target": "claude_skills_writing_for_agents_skill_mechanics",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_writing_for_agents_skill",
+			"target": "writing_for_agents_context_pointer_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_writing_for_agents_skill",
+			"target": "writing_for_agents_context_load_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_writing_for_agents_skill",
+			"target": "writing_for_agents_cognitive_load_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_writing_for_agents_skill",
+			"target": "writing_for_agents_information_hierarchy_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_writing_for_agents_skill",
+			"target": "writing_for_agents_leading_word_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "claude_skills_writing_for_agents_skill",
+			"target": "writing_for_agents_progressive_disclosure_concept",
+			"relation": "references",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		},
+		{
+			"source": "writing_for_agents_leading_word_concept",
+			"target": "wayfinder_fog_of_war_concept",
+			"relation": "cites",
+			"confidence": "EXTRACTED",
+			"confidence_score": 1.0,
+			"source_file": ".claude/skills/writing-for-agents/SKILL.md",
+			"source_location": null,
+			"weight": 1.0
+		}
+	],
+	"hyperedges": []
+}
