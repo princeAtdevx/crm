@@ -128,10 +128,13 @@ USER bun
 
 EXPOSE 3000
 
-# There is no /health route; GET / is what the app exposes. Using `bun -e`
-# avoids installing curl.
+# /health/ready (not /health/live): Docker restarts an unhealthy container, and
+# for a single-container run a database it cannot reach is worth restarting for.
+# Orchestrators should probe /health/live as the liveness probe and
+# /health/ready as the readiness probe instead. Using `bun -e` avoids
+# installing curl.
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD bun -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+    CMD bun -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 # Exec form is required: shell form would put /bin/sh between tini and Bun.
 ENTRYPOINT ["/usr/local/bin/tini", "--"]

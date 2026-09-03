@@ -1,8 +1,9 @@
 {
 	"name": "@crm/utils",
 	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"description": "Framework-agnostic helpers shared across workspaces.",
+	"private": true,
+	"type": "module",
 	"scripts": {
 		"check-types": "tsc -p tsconfig.json --noEmit",
 		"lint": "biome check .",
@@ -12,7 +13,8 @@
 		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo"
 	},
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
 	},
 	"dependencies": {},
 	"devDependencies": {
@@ -21,6 +23,5 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
-	"type": "commonjs"
+	"license": "ISC"
 }

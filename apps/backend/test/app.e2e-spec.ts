@@ -1,5 +1,5 @@
-import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { INestApplication } from '@nestjs/common';
+import { Test, type TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -9,7 +9,7 @@ import { AppModule } from './../src/app.module';
  * points at the throwaway `crm_test` database. Run `pnpm --filter @crm/db
  * db:migrate` against it once before running this suite.
  */
-describe('AppController (e2e)', () => {
+describe('Health (e2e)', () => {
 	let app: INestApplication;
 
 	beforeAll(async () => {
@@ -23,12 +23,18 @@ describe('AppController (e2e)', () => {
 		await app.init();
 	});
 
-	it('/ (GET)', () => {
-		return request(app.getHttpServer()).get('/').expect(200).expect('Hello World!');
+	it('/health/live (GET) reports ok without touching the database', async () => {
+		const res = await request(app.getHttpServer()).get('/health/live').expect(200);
+
+		expect(res.body.status).toBe('ok');
+		expect(res.body.details).toEqual({});
 	});
 
-	it('/users/:id (GET) returns an empty list for an unknown id', () => {
-		return request(app.getHttpServer()).get('/users/does-not-exist').expect(200).expect([]);
+	it('/health/ready (GET) reports the database as up', async () => {
+		const res = await request(app.getHttpServer()).get('/health/ready').expect(200);
+
+		expect(res.body.status).toBe('ok');
+		expect(res.body.details.database).toEqual({ status: 'up' });
 	});
 
 	afterAll(async () => {
