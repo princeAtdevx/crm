@@ -1,0 +1,22 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "@crm/ts-config/base.json",
+	"compilerOptions": {
+		// Server-only package: no DOM libs.
+		"lib": ["ES2023"],
+		"types": ["node"],
+
+		// Bun runs this TypeScript directly and there is no build, so tsc only
+		// ever type-checks. "bundler" resolution is what permits the
+		// extension-less relative imports below.
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"verbatimModuleSyntax": true,
+		"noEmit": true,
+
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules"]
+}
