@@ -11,6 +11,10 @@
 		"format:check": "biome format .",
 		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo"
 	},
+	"devDependencies": {
+		"@crm/ts-config": "workspace:*",
+		"@types/node": "catalog:"
+	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",

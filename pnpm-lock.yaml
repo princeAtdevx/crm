@@ -228,7 +228,14 @@ importers:
         specifier: 'catalog:'
         version: 2.5.11
 
-  packages/types: {}
+  packages/types:
+    devDependencies:
+      '@crm/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.13.3
 
   packages/ui:
     dependencies:
