@@ -2,6 +2,7 @@
 	"name": "crm",
 	"private": true,
 	"scripts": {
+		"preinstall": "case \"$npm_config_user_agent\" in pnpm/*) ;; *) printf '\\n  This repo installs with pnpm only (engines.pnpm). Run: pnpm install\\n\\n' >&2; exit 1 ;; esac",
 		"dev": "turbo run dev",
 		"build": "turbo run build",
 		"check-types": "turbo run check-types",
@@ -25,6 +26,8 @@
 	},
 	"packageManager": "pnpm@11.23.0",
 	"engines": {
-		"node": ">=24"
+		"node": ">=24",
+		"pnpm": ">=11.23.0",
+		"bun": ">=1.4.0"
 	}
 }
