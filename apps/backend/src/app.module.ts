@@ -14,7 +14,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 			isGlobal: true,
 			cache: true,
 			expandVariables: true,
-			// Relative to process.cwd(), which is apps/http for both `nest start`
+			// Relative to process.cwd(), which is apps/backend for both `nest start`
 			// and `node dist/main.js` — so these point at the repo root.
 			envFilePath:
 				process.env.NODE_ENV === 'test'

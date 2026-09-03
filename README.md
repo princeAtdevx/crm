@@ -6,7 +6,7 @@ Turborepo monorepo, pnpm workspaces, **Bun** as the runtime.
 
 | Workspace          | What it is                                                    |
 | ------------------ | ------------------------------------------------------------- |
-| `apps/http`        | NestJS 12 API, run directly from TypeScript by Bun            |
+| `apps/backend`     | NestJS 12 API, run directly from TypeScript by Bun            |
 | `apps/web`         | Vite 8 + React 19 front end, also run by Bun                  |
 | `packages/db`      | `@crm/db` — Drizzle ORM schema and client, shipped as source  |
 | `packages/ui`      | `@crm/ui` — React components + Tailwind v4 tokens, as source  |
