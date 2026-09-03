@@ -226,6 +226,7 @@ function updateSelectAllState() {
   selectAllCb.indeterminate = hidden > 0 && hidden < total;
 }
 
+// biome-ignore lint/correctness/noUnusedVariables: invoked via inline onchange attribute above
 function toggleAllCommunities(hide) {
   document.querySelectorAll('.legend-item').forEach(item => {
     hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
@@ -302,7 +303,7 @@ function convexHull(pts) {
     const hull = build(p).concat(build(p.slice().reverse()));
     return hull.length >= 3 ? hull : p;
 }
-network.on('afterDrawing', function(ctx) {
+network.on('afterDrawing', (ctx) => {
     hyperedges.forEach(h => {
         const positions = h.nodes
             .map(nid => network.getPositions([nid])[nid])
@@ -326,7 +327,7 @@ network.on('afterDrawing', function(ctx) {
             y: cy + (p.y - cy) * 1.15
         }));
         ctx.moveTo(expanded[0].x, expanded[0].y);
-        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        expanded.slice(1).forEach(p => { ctx.lineTo(p.x, p.y); });
         ctx.closePath();
         ctx.fill();
         ctx.globalAlpha = 0.4;
