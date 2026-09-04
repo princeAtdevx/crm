@@ -15,7 +15,10 @@
 			// .where(), even when forced to "error" — presumably the rc type
 			// shape is not recognised. Treat this as free future coverage, not
 			// as a guard you can rely on today.
-			"drizzle": "all"
+			"drizzle": "all",
+			// vitest globals + noFocusedTests, for src/**/*.spec.ts and the
+			// integration suite under test/.
+			"test": "recommended"
 		},
 		"rules": {
 			"style": {

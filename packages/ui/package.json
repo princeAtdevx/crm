@@ -14,6 +14,9 @@
 		"lint:fix": "biome check --write .",
 		"format": "biome format --write .",
 		"format:check": "biome format .",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:cov": "vitest run --coverage",
 		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo"
 	},
 	"peerDependencies": {
@@ -29,10 +32,16 @@
 	"devDependencies": {
 		"@biomejs/biome": "catalog:",
 		"@crm/ts-config": "workspace:*",
+		"@crm/vitest-config": "workspace:*",
+		"@testing-library/jest-dom": "catalog:",
+		"@testing-library/react": "catalog:",
+		"@testing-library/user-event": "catalog:",
 		"@types/react": "catalog:",
 		"@types/react-dom": "catalog:",
 		"react": "catalog:",
 		"react-dom": "catalog:",
-		"typescript": "catalog:"
-	}
+		"typescript": "catalog:",
+		"vitest": "catalog:"
+	},
+	"license": "UNLICENSED"
 }

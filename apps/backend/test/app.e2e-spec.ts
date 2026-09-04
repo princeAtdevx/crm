@@ -5,7 +5,7 @@ import { AppModule } from './../src/app.module';
 
 /**
  * Boots the real AppModule, so it needs a reachable database: NODE_ENV=test
- * (set by vitest) makes ConfigModule read apps/backend/.env.test first, which
+ * (set by vitest) makes ConfigModule read the repo-root .env.test first, which
  * points at the throwaway `crm_test` database — created by
  * docker/postgres/init when `pnpm db:start` first builds the volume.
  * Migrate it once with `pnpm db:migrate:test` before running this suite.
