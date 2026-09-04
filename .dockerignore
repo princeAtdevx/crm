@@ -11,4 +11,3 @@
 Dockerfile
 .dockerignore
 **/.env.test
-graphify*
