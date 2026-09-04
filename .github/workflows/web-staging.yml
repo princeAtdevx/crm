@@ -1,0 +1,274 @@
+# CI + CD for apps/web (Vite + React SPA) -- STAGING stage.
+#
+# Fully self-contained: this file owns its own lint/check-types/test/build
+# AND its own deploy, independently of web-production.yml. The two are
+# deliberately not shared -- staging runs a deliberately minimal footprint
+# given low staging traffic, and coupling their pipelines through shared jobs
+# would make that divergence harder, not easier. Duplication between this
+# file and web-production.yml is accepted on purpose; keep them in sync by
+# hand when CI steps change, don't reach for a shared workflow_call unless
+# the two architectures re-converge.
+#
+# Staging keeps the SAME S3 + CloudFront shape as production (HTTPS still
+# needs CloudFront in front of S3; there's no simpler way to get TLS on a
+# custom domain) -- just a single distribution with no extra domains/WAF/
+# multi-region replication, sized for a handful of testers rather than real
+# traffic. Cache-Control below is unchanged from production on purpose:
+# Vite content-hashes every asset filename, so long immutable caching on
+# hashed assets is safe in any environment; only index.html (unhashed) needs
+# the no-cache treatment, and that's already how it's handled below.
+#
+# Deploy only runs on push to staging, after this file's own CI passes. It
+# ships apps/web/dist to S3 behind CloudFront.
+#
+# Build-time config (VITE_* vars baked into the JS bundle) comes from
+# GitHub Environment variables, read directly in the `build` job's `env:`
+# block. Not Secrets Manager: Vite bakes these into dist/assets/*.js as
+# plaintext, shipped to every browser that loads the site, so there is
+# nothing for Secrets Manager to protect here -- it would only add an extra
+# IAM role, an extra AWS call, and JSON-parsing logic for no security gain.
+# Real secrets never belong in a VITE_* var regardless of where they're
+# sourced from.
+#
+# This is boilerplate: no real AWS account is wired up yet. Before this can
+# deploy anything, set the variables/secret listed next to the `deploy` job
+# below, on the "staging" GitHub Environment.
+#
+# pnpm installs (matches the lockfile + catalog), Bun runs (apps/web's
+# scripts shell out to `bun --bun vite ...` -- see apps/web/package.json).
+# Both toolchains are set up in every job that touches the workspace.
+
+name: web-staging
+
+on:
+  push:
+    branches: [staging]
+    paths:
+      - "apps/web/**"
+      - "packages/ui/**"
+      - "packages/ts-config/**"
+      - "packages/types/**"
+      - "packages/utils/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "biome.jsonc"
+      - ".github/workflows/web-staging.yml"
+  pull_request:
+    paths:
+      - "apps/web/**"
+      - "packages/ui/**"
+      - "packages/ts-config/**"
+      - "packages/types/**"
+      - "packages/utils/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "biome.jsonc"
+      - ".github/workflows/web-staging.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: web-staging-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Kept in sync manually with root package.json (packageManager) and
+  # docker/Dockerfile.backend's BUN_VERSION -- there is no single source
+  # both a Dockerfile ARG and a workflow env block can read.
+  PNPM_VERSION: "11.23.0"
+  BUN_VERSION: "1.4.0"
+  NODE_VERSION: "24"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec turbo run lint --filter=@crm/web
+
+  check-types:
+    name: Check types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check types
+        run: pnpm exec turbo run check-types --filter=@crm/web
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # No test script exists in apps/web/package.json yet. turbo silently
+      # no-ops a task that isn't defined in the target package's
+      # package.json, so this stays green until a test script is added
+      # rather than deleting the job now and forgetting to bring it back.
+      - name: Test
+        run: pnpm exec turbo run test --filter=@crm/web
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, check-types, test]
+    # Needed so `vars.*` below resolves against the "staging" GitHub
+    # Environment's variables, not repo-wide ones. Vite bakes VITE_* vars
+    # into the JS bundle at build time -- there is no later point (unlike
+    # the backend's ECS/Secrets Manager injection) where a per-stage value
+    # could reach this app, so the right value has to be present right here.
+    environment: staging
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Only VITE_-prefixed vars are exposed to client code (Vite's own
+      # convention) and Vite substitutes them into the bundle literally at
+      # build time -- there is no runtime env injection for a static SPA.
+      # Never put real secrets here: whatever value is set below ships in
+      # plain text to every browser that loads the site. Add more by adding
+      # more lines here AND as a variable on the "staging" GitHub
+      # Environment (Settings -> Environments -> staging -> Variables).
+      - name: Build
+        run: pnpm exec turbo run build --filter=@crm/web
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist-staging
+          path: apps/web/dist
+          retention-days: 7
+
+  deploy:
+    name: Deploy to S3 + CloudFront
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.event_name == 'push'
+    environment: staging
+    permissions:
+      id-token: write # required for OIDC -> AWS role assumption
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist-staging
+          path: dist
+
+      # --- Boilerplate only below this line --------------------------------
+      # Nothing here is wired to a real AWS account yet. Before this job can
+      # run successfully:
+      #
+      #   1. Create an IAM OIDC provider for token.actions.githubusercontent.com
+      #      (shared with other workflows if they're in the same AWS account --
+      #      one provider per account, not per repo/workflow).
+      #   2. Create an IAM role that trusts this repo via that provider, scoped
+      #      to `repo:<org>/<repo>:ref:refs/heads/staging`, with permissions
+      #      to write to the staging S3 bucket and create CloudFront
+      #      invalidations on the staging distribution ONLY -- kept separate
+      #      from the production role so a staging deploy can never touch
+      #      production resources.
+      #   3. Create the staging S3 bucket + a single CloudFront distribution
+      #      in front of it (no extra domains, no WAF, no multi-region --
+      #      just enough to get HTTPS on the S3 origin for a handful of
+      #      testers). On the distribution, add custom error responses:
+      #      403 -> /index.html (200) and 404 -> /index.html (200). This app
+      #      is a client-side-routed SPA (React Router). A direct hit or
+      #      refresh on a route like /dashboard has no matching S3 object --
+      #      S3 returns 403 (no ListBucket) or 404, and without this rule
+      #      CloudFront passes that error straight to the browser instead of
+      #      index.html, so React Router never gets a chance to render the
+      #      route.
+      #   4. Set variables on the "staging" GitHub Environment (Settings ->
+      #      Environments -> staging -> Variables): AWS_REGION,
+      #      AWS_S3_BUCKET, AWS_CLOUDFRONT_DISTRIBUTION_ID.
+      #   5. Set a secret on the "staging" GitHub Environment:
+      #      AWS_DEPLOY_ROLE_ARN.
+      #
+      # Until then this job will fail at "Configure AWS credentials" -- that
+      # is expected for boilerplate with no target account.
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Sync build output to S3
+        run: |
+          aws s3 sync dist/ "s3://${{ vars.AWS_S3_BUCKET }}" \
+            --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "index.html"
+
+          # index.html must never be cached at the edge/browser the same way
+          # hashed assets are -- it's the entry point that references them by
+          # hash, so a stale cached copy would point at assets CloudFront has
+          # already evicted.
+          aws s3 cp dist/index.html "s3://${{ vars.AWS_S3_BUCKET }}/index.html" \
+            --cache-control "public,max-age=0,must-revalidate"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*"
