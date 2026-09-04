@@ -1,10 +1,10 @@
 {
 	"version": 1,
 	"skills": {
-		"ask-matt": {
+		"ask-ai": {
 			"source": "mattpocock/skills",
 			"sourceType": "github",
-			"skillPath": "skills/engineering/ask-matt/SKILL.md",
+			"skillPath": "skills/engineering/ask-ai/SKILL.md",
 			"computedHash": "0cd14026efa0330083cbc7adf590976c162b60e02f696a8dcce96f0b4dab8a72"
 		},
 		"claude-handoff": {
@@ -127,10 +127,10 @@
 			"skillPath": "skills/misc/scaffold-exercises/SKILL.md",
 			"computedHash": "354c91f6dbc9b058632f30594aacb4edc6d25012596585abb00402af8d7ec5e9"
 		},
-		"setup-matt-pocock-skills": {
+		"setup-project": {
 			"source": "mattpocock/skills",
 			"sourceType": "github",
-			"skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
+			"skillPath": "skills/engineering/setup-project/SKILL.md",
 			"computedHash": "552b0f48b9fe054aa93c5d432fefbd7bd9645e3f2d20b4e22432453a81800b21"
 		},
 		"setup-pre-commit": {
