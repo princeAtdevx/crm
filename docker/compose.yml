@@ -1,0 +1,78 @@
+# Local development dependencies. NOT a deployment artifact — the production
+# image is docker/Dockerfile.backend, and nothing here is hardened for it.
+#
+# Driven through the root package.json scripts rather than invoked directly, so
+# that the -f path and the project name stay consistent:
+#
+#   pnpm db:start     start Postgres and wait for it to accept connections
+#   pnpm db:stop      stop it, keeping the data volume
+#   pnpm db:reset     destroy the volume, recreate, migrate and seed
+#   pnpm db:tools     add pgweb on http://localhost:8081
+name: crm
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      # Matches the DATABASE_URL in .env.example. Credentials are deliberately
+      # trivial: this listens on loopback and holds throwaway data.
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: crm
+      # Pinned rather than inherited. The image has defaulted to scram-sha-256
+      # since PG 14, but it is one `POSTGRES_HOST_AUTH_METHOD=trust` away from a
+      # server that ignores passwords entirely — at which point a DATABASE_URL
+      # with the wrong password works locally and fails in staging.
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256'
+    ports:
+      # Bound to 127.0.0.1, not 0.0.0.0: the default publishes the port to
+      # every interface, which on a laptop means anyone on the coffee-shop
+      # network can reach it with the password above.
+      #
+      # POSTGRES_PORT comes from the SHELL, not from the repo-root .env
+      # (`POSTGRES_PORT=5433 pnpm db:start`). Compose resolves both its env file
+      # and its relative paths against the project directory, which `-f
+      # docker/compose.yml` sets to docker/ — pointing it at the root .env with
+      # --project-directory would silently re-root ./postgres/init too.
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      # /var/lib/postgresql, NOT /var/lib/postgresql/data. The 18+ images store
+      # data in a major-version subdirectory (/var/lib/postgresql/18/docker) so
+      # that `pg_upgrade --link` does not straddle a mount boundary, and the
+      # entrypoint hard-refuses to start when it finds a volume mounted at the
+      # old path. Reverting this yields a container that restart-loops with
+      # "there appears to be PostgreSQL data in: /var/lib/postgresql/data".
+      - postgres-data:/var/lib/postgresql
+      # Runs ONCE, on an empty data directory only. Editing a file here has no
+      # effect on an existing volume — `pnpm db:reset` is what re-runs it.
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # -U and -d matter: bare `pg_isready` checks as the root user against a
+      # database named after it, which reports failure on a healthy server.
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d crm']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+    # Small but load-bearing for the e2e suite: the default 64MB shm makes
+    # parallel test transactions fail with "could not resize shared memory".
+    shm_size: 256mb
+
+  # Opt-in, so `pnpm db:start` does not pull an image nobody asked for.
+  # Started by `pnpm db:tools`.
+  pgweb:
+    image: sosedoff/pgweb:latest
+    profiles: ['tools']
+    restart: unless-stopped
+    environment:
+      PGWEB_DATABASE_URL: postgres://postgres:postgres@postgres:5432/crm?sslmode=disable
+    ports:
+      - '127.0.0.1:8081:8081'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres-data:

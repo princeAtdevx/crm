@@ -1,0 +1,28 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "../../packages/ts-config/nest.json",
+	"compilerOptions": {
+		// Set directly, not inherited. Bun does not follow `extends` to a bare
+		// package specifier (e.g. "@crm/ts-config/nest.json"), so inheriting these
+		// would silently drop decorator metadata and break Nest DI at runtime.
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+
+		// nest.json loosens these three; re-tighten rather than silently regress.
+		"noImplicitAny": true,
+		"strictBindCallApply": true,
+		"noFallthroughCasesInSwitch": true,
+
+		// Nest DI assigns constructor-injected properties.
+		"strictPropertyInitialization": false,
+
+		// Bun runs the TypeScript directly, so tsc only ever type-checks.
+		"module": "preserve",
+		"moduleResolution": "bundler",
+		"noEmit": true,
+
+		"types": ["vitest/globals", "node"]
+	},
+	"include": ["src", "test", "vitest.config.ts", "vitest.config.e2e.ts"],
+	"exclude": ["node_modules", "dist"]
+}

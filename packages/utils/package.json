@@ -1,0 +1,32 @@
+{
+	"name": "@crm/utils",
+	"version": "0.0.0",
+	"description": "Framework-agnostic helpers shared across workspaces.",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"check-types": "tsc -p tsconfig.json --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"format:check": "biome format .",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:cov": "vitest run --coverage",
+		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo"
+	},
+	"exports": {
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@biomejs/biome": "catalog:",
+		"@crm/ts-config": "workspace:*",
+		"@crm/vitest-config": "workspace:*",
+		"@types/node": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
+	},
+	"license": "UNLICENSED"
+}

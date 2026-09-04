@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { defineConfig } from 'drizzle-kit';
 
-// Single source of truth: the repo-root .env, same file apps/http reads.
+// Single source of truth: the repo-root .env, same file apps/backend reads.
 config({ path: ['../../.env.local', '../../.env'] });
 
 const url = process.env.DATABASE_URL;
@@ -11,7 +11,7 @@ if (!url) {
 
 export default defineConfig({
 	// Generated SQL lives outside ./src so it never enters tsc's rootDir.
-	out: './drizzle',
+	out: './drizzle/migrations',
 	schema: './src/schema/schema.ts',
 	dialect: 'postgresql',
 	dbCredentials: { url },

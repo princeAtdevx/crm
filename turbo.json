@@ -2,6 +2,31 @@
 	"$schema": "https://turborepo.dev/schema.json",
 	"ui": "tui",
 	"globalDependencies": ["biome.jsonc", ".editorconfig"],
+
+	// Turbo 2 defaults to `envMode: "strict"`: a task sees ONLY the variables
+	// declared here. An omission is not "inherited but uncached" — the variable
+	// is absent inside the task, so it surfaces as a config validation error at
+	// boot rather than as a cache miss. Biome's noUndeclaredEnvVars rule reads
+	// this file and flags any process.env access missing from it.
+	//
+	// NODE_ENV is in globalEnv because it changes what tasks produce. Everything
+	// else is globalPassThroughEnv: reachable by tasks, but not part of the
+	// cache key — pointing DATABASE_URL at a different local database should not
+	// invalidate a lint or build result.
+	"globalEnv": ["NODE_ENV"],
+	"globalPassThroughEnv": [
+		"DATABASE_URL",
+		"PORT",
+		// Read by scripts/preflight-db.mjs and docker/compose.yml.
+		"POSTGRES_PORT",
+		"SKIP_DB_CHECK",
+		// OBSERVE_ENDPOINT is read by @nestjs/observe itself, not by our code.
+		"OBSERVE_APP_KEY",
+		"OBSERVE_APP_SECRET",
+		"OBSERVE_SERVICE_ID",
+		"OBSERVE_SERVICE_VERSION",
+		"OBSERVE_ENDPOINT"
+	],
 	"tasks": {
 		"lint": {
 			"dependsOn": ["^lint"],
@@ -31,8 +56,26 @@
 			"dependsOn": ["^check-types"],
 			"outputs": []
 		},
+		// No dependsOn: every workspace package is source-only, so there is
+		// nothing to build before a test can import it. That is also what
+		// lets CI run one workspace's suite in isolation.
 		"test": {
+			// Same narrowing as `lint`: none of these can change what a unit
+			// test does, so editing one must not bust the cache. .env in
+			// particular is excluded because the DB-free suites read none.
+			"inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!**/*.sql", "!.env*"],
 			"outputs": []
+		},
+		"test:cov": {
+			"outputs": ["coverage/**"]
+		},
+		// Depends on a live Postgres, whose contents Turbo cannot hash. A
+		// cache hit here would report success against a database it never saw.
+		"test:integration": {
+			"cache": false
+		},
+		"test:e2e": {
+			"cache": false
 		},
 		"clean": {
 			"cache": false

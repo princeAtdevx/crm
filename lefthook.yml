@@ -13,6 +13,25 @@ pre-commit:
       run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
       stage_fixed: true
 
+    # pnpm is the only supported package manager (engines.pnpm + the root
+    # `preinstall` guard). `bun install` in particular gets partway before that
+    # guard trips: it rewrites package.json, folds pnpm-workspace.yaml into a
+    # `workspaces` field, and writes bun.lock. These two jobs stop that damage
+    # from reaching the repo.
+    - name: no-foreign-lockfile
+      glob: "{bun.lock,bun.lockb,package-lock.json,npm-shrinkwrap.json,yarn.lock}"
+      run: |
+        printf '\n  %s\n\n' "Foreign lockfile staged: {staged_files}. This repo uses pnpm-lock.yaml only." >&2
+        printf '  %s\n' "Delete it, restore package.json and pnpm-workspace.yaml, then run: pnpm install" >&2
+        exit 1
+
+    - name: pnpm-workspace-intact
+      run: |
+        test -f pnpm-workspace.yaml || {
+          printf '\n  %s\n\n' "pnpm-workspace.yaml is missing -- 'bun install' folds it into package.json. Restore it before committing." >&2
+          exit 1
+        }
+
 pre-push:
   parallel: true
   jobs:
@@ -20,3 +39,7 @@ pre-push:
       run: pnpm run check-types
     - name: biome-ci
       run: pnpm run ci
+    # Unit suites only. They need no database and no Docker, so this stays
+    # fast; test:integration and test:e2e are left to CI.
+    - name: test
+      run: pnpm run test

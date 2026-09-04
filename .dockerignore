@@ -10,3 +10,5 @@
 .env.*.local
 Dockerfile
 .dockerignore
+**/.env.test
+graphify*

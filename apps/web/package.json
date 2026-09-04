@@ -12,6 +12,9 @@
 		"lint:fix": "biome check --write .",
 		"format": "biome format --write .",
 		"format:check": "biome format .",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:cov": "vitest run --coverage",
 		"clean": "rm -rf dist .turbo coverage *.tsbuildinfo node_modules/.tmp"
 	},
 	"dependencies": {
@@ -23,8 +26,12 @@
 		"@babel/core": "^7.29.7",
 		"@biomejs/biome": "catalog:",
 		"@crm/ts-config": "workspace:*",
+		"@crm/vitest-config": "workspace:*",
 		"@rolldown/plugin-babel": "^0.2.3",
 		"@tailwindcss/vite": "catalog:",
+		"@testing-library/jest-dom": "catalog:",
+		"@testing-library/react": "catalog:",
+		"@testing-library/user-event": "catalog:",
 		"@types/babel__core": "^7.20.5",
 		"@types/node": "catalog:",
 		"@types/react": "catalog:",
@@ -33,6 +40,8 @@
 		"babel-plugin-react-compiler": "^1.0.0",
 		"tailwindcss": "catalog:",
 		"typescript": "catalog:",
-		"vite": "^8.2.2"
-	}
+		"vite": "catalog:",
+		"vitest": "catalog:"
+	},
+	"license": "UNLICENSED"
 }

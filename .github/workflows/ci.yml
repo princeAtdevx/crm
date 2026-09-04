@@ -1,0 +1,161 @@
+# One job per workspace, so a failure names the app that broke rather than the
+# repo. Mirrors what lefthook runs on pre-push (check-types, biome, unit tests)
+# and adds the two suites that need a database.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      workspace:
+        description: "Run only this workspace's unit suite (pnpm filter name, e.g. @crm/ui). Leave blank for all."
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TELEMETRY_DISABLED: "1"
+  DO_NOT_TRACK: "1"
+
+jobs:
+  # ---------------------------------------------------------------- unit ----
+  # Every workspace package is source-only, so nothing has to be built before
+  # its tests can import it. That is what lets these run independently.
+  test:
+    name: test (${{ matrix.workspace }})
+    runs-on: ubuntu-latest
+    strategy:
+      # The whole point of the matrix: one broken app must not cancel the
+      # others and hide whether they were broken too.
+      fail-fast: false
+      matrix:
+        workspace: ["@crm/backend", "@crm/web", "@crm/ui", "@crm/utils", "@crm/types", "@crm/db"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Restore turbo cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ matrix.workspace }}-${{ github.sha }}
+          restore-keys: turbo-${{ matrix.workspace }}-
+      # Skipped when workflow_dispatch named a different workspace.
+      - if: >-
+          github.event_name != 'workflow_dispatch'
+          || inputs.workspace == ''
+          || inputs.workspace == matrix.workspace
+        run: pnpm turbo run test --filter=${{ matrix.workspace }}
+
+  # ------------------------------------------------------- static analysis ---
+  # Separate jobs so they report on their own instead of queueing behind the
+  # matrix. Same two commands lefthook runs on pre-push.
+  check-types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run check-types
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run ci
+
+  # ------------------------------------------------------ database-backed ----
+  # Not matrix entries: these need a service container, and keeping them
+  # separate means the DB-free matrix above still reports when Postgres is the
+  # thing that is broken.
+  test-integration:
+    name: test:integration (@crm/db)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          # docker/compose.yml creates crm_test from an init script that only
+          # runs on an empty volume. A service container cannot mount that, so
+          # the database is named at creation instead. It must end in _test:
+          # packages/db/test/test-db.ts refuses anything else.
+          POSTGRES_DB: crm_test
+        options: >-
+          --health-cmd "pg_isready -U postgres -d crm_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+          --shm-size=256m
+        ports:
+          - 5432:5432
+    env:
+      # The repo-root .env.test names this same database, and dotenv will not
+      # overwrite a variable already set -- so this is belt and braces, and it
+      # keeps the job readable without opening another file.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/crm_test
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Apply migrations
+        run: pnpm --filter @crm/db db:migrate
+      - run: pnpm turbo run test:integration --filter=@crm/db
+
+  test-e2e:
+    name: test:e2e (@crm/backend)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: crm_test
+        options: >-
+          --health-cmd "pg_isready -U postgres -d crm_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+          --shm-size=256m
+        ports:
+          - 5432:5432
+    env:
+      # The repo-root .env.test already points here; set explicitly so the job
+      # does not depend on dotenv precedence.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/crm_test
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Apply migrations
+        run: pnpm --filter @crm/db db:migrate
+      - run: pnpm turbo run test:e2e --filter=@crm/backend

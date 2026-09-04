@@ -15,11 +15,14 @@
 			// .where(), even when forced to "error" — presumably the rc type
 			// shape is not recognised. Treat this as free future coverage, not
 			// as a guard you can rely on today.
-			"drizzle": "all"
+			"drizzle": "all",
+			// vitest globals + noFocusedTests, for src/**/*.spec.ts and the
+			// integration suite under test/.
+			"test": "recommended"
 		},
 		"rules": {
 			"style": {
-				// Opposite of apps/http: this package has no decorators and sets
+				// Opposite of apps/backend: this package has no decorators and sets
 				// verbatimModuleSyntax, so type-only imports MUST be marked.
 				"useImportType": "error"
 			}

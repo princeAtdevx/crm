@@ -1,0 +1,13 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.11/schema.json",
+	"root": false,
+	"extends": "//",
+
+	"linter": {
+		"domains": {
+			// vitest globals + noFocusedTests. The root config does not enable
+			// this; each workspace that has tests opts in.
+			"test": "recommended"
+		}
+	}
+}
