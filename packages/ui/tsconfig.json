@@ -1,7 +1,10 @@
 {
 	"extends": "@crm/ts-config/react-app.json",
 	"compilerOptions": {
-		"types": []
+		// vitest/globals: the shared preset runs with `globals: true`.
+		// jest-dom: its matcher augmentations (toBeInTheDocument etc.) only
+		// reach tsc if the package is named here.
+		"types": ["vitest/globals", "@testing-library/jest-dom"]
 	},
-	"include": ["src"]
+	"include": ["src", "vitest.config.ts"]
 }

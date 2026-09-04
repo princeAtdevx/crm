@@ -10,7 +10,9 @@
 			// Class-attribute rules. Biome cannot read the `@theme` block in
 			// src/styles.css, so it only reasons about stock Tailwind
 			// utilities — still worth having.
-			"tailwind": "recommended"
+			"tailwind": "recommended",
+			// vitest globals + noFocusedTests.
+			"test": "recommended"
 		},
 		"rules": {
 			"style": {

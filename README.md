@@ -23,10 +23,10 @@ Needs Node >= 24, pnpm >= 11.23, Bun >= 1.4 and a running Docker daemon.
 ```sh
 pnpm install
 cp .env.example .env
-pnpm db:start                   # Postgres in Docker, waits until it is healthy
+pnpm dev:db:start               # Postgres in Docker, waits until it is healthy
 pnpm db:migrate                 # apply migrations to crm
-pnpm db:migrate:test            # ...and to crm_test, which the e2e suite uses
-pnpm db:seed                    # three fixture users, safe to re-run
+pnpm dev:db:migrate:test        # ...and to crm_test, which the test suites use
+pnpm dev:db:seed                # three fixture users, safe to re-run
 pnpm dev
 ```
 
@@ -41,33 +41,37 @@ pnpm dev                        # every app (checks Postgres first)
 pnpm --filter @crm/web dev      # just the front end, no database needed
 pnpm build                      # only apps/web produces output today
 pnpm check-types
-pnpm test                       # pnpm --filter backend test:e2e for the e2e suite
-pnpm ci                         # biome ci . — what pre-push runs
+pnpm test                       # unit suites, every workspace, no database
+pnpm test:integration           # @crm/db, needs Postgres
+pnpm test:e2e                   # @crm/backend, needs Postgres
+pnpm --filter @crm/ui test      # one workspace on its own
+pnpm run ci                     # biome ci . — what pre-push runs
 pnpm check:fix                  # biome check --write . across the repo
 ```
 
 ### Local database
 
 One Postgres container, defined in `docker/compose.yml`, holding two databases:
-`crm` for development and `crm_test` for the e2e suite, so a test run cannot
+`crm` for development and `crm_test` for the test suites, so a test run cannot
 truncate the data you have been clicking through all morning.
 
 ```sh
-pnpm db:start                   # up -d --wait (blocks on the healthcheck)
-pnpm db:stop                    # keeps the volume
-pnpm db:logs
-pnpm db:tools                   # pgweb on http://localhost:8081
-pnpm db:reset                   # DESTROYS the volume, then migrate + seed
+pnpm dev:db:start               # up -d --wait (blocks on the healthcheck)
+pnpm dev:db:stop                # keeps the volume
+pnpm dev:db:logs
+pnpm dev:db:tools               # pgweb on http://localhost:8081
+pnpm dev:db:migrate:test        # migrate crm_test — do this before the DB suites
+pnpm dev:db:reset               # DESTROYS the volume, then migrate + seed
 pnpm db:studio                  # drizzle studio against DATABASE_URL
 ```
 
-`pnpm db:reset` is the only thing that re-runs `docker/postgres/init`, so it is
-what you need after editing anything in there.
+`pnpm dev:db:reset` is the only thing that re-runs `docker/postgres/init`, so it
+is what you need after editing anything in there.
 
 Port 5432 already taken? Publish another one and match it in `.env`:
 
 ```sh
-POSTGRES_PORT=5433 pnpm db:start
+POSTGRES_PORT=5433 pnpm dev:db:start
 ```
 
 Schema changes go through `pnpm db:generate` (writes SQL into

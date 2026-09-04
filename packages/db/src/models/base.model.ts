@@ -1,9 +1,9 @@
-import type { DrizzleClient } from '../client';
+import type { DrizzleQueryable } from '../client';
 
 export class Model {
-	protected drizzle: DrizzleClient;
+	protected drizzle: DrizzleQueryable;
 
-	constructor(drizzle: DrizzleClient) {
+	constructor(drizzle: DrizzleQueryable) {
 		this.drizzle = drizzle;
 	}
 }

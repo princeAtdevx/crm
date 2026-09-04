@@ -39,3 +39,7 @@ pre-push:
       run: pnpm run check-types
     - name: biome-ci
       run: pnpm run ci
+    # Unit suites only. They need no database and no Docker, so this stays
+    # fast; test:integration and test:e2e are left to CI.
+    - name: test
+      run: pnpm run test

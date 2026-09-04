@@ -1,17 +1,16 @@
-import tsconfigPaths from 'vite-tsconfig-paths';
-import { defineConfig } from 'vitest/config';
+import node from '@crm/vitest-config/node';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default defineConfig({
-	// Resolves the path aliases declared in tsconfig.json, including the ones
-	// added by `nest g library`.
-	plugins: [tsconfigPaths()],
-	// @crm/db and @crm/utils are published as TypeScript source (no build), so
-	// Vite must transform them rather than externalising them to Node's
-	// resolver.
-	ssr: { noExternal: ['@crm/db', '@crm/utils'] },
-	test: {
-		globals: true,
-		root: './',
-		include: ['**/*.spec.ts'],
-	},
-});
+// Unit suite. ssr.noExternal for the raw-TS @crm packages, tsconfig paths and
+// coverage all come from the shared preset now.
+export default mergeConfig(
+	node,
+	defineConfig({
+		test: {
+			// See packages/db/vitest.config.ts: off in the preset on purpose,
+			// on here because the only suite this app has today is test:e2e.
+			// Delete this line with the first src/**/*.spec.ts.
+			passWithNoTests: true,
+		},
+	}),
+);
