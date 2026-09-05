@@ -26,6 +26,16 @@ catalog:
   "@vitest/coverage-v8": ^4.1.11
   typescript: ^6.0.3
   vitest: ^4.1.11
+  # Testing Library talks to the DOM through @testing-library/dom, which both
+  # /react and /jest-dom declare as a peer. Keeping the three on one line of
+  # sight here is what stops two copies of it ending up in the graph.
+  "@testing-library/react": ^16.3.3
+  "@testing-library/user-event": ^14.6.7
+  "@testing-library/jest-dom": ^7.0.1
+  jsdom: ^30.0.1
+  # Owned by @crm/vitest-config, which needs a real vite to build a config
+  # object. apps/web pins the same range for its dev server.
+  vite: ^8.2.2
   react: ^19.2.8
   react-dom: ^19.2.8
   "@types/react": ^19.2.18

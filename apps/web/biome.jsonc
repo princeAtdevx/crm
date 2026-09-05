@@ -13,7 +13,9 @@
 	"linter": {
 		"domains": {
 			"react": "recommended",
-			"tailwind": "recommended"
+			"tailwind": "recommended",
+			// vitest globals + noFocusedTests, for src/**/*.spec.tsx.
+			"test": "recommended"
 		},
 		"rules": {
 			"style": {

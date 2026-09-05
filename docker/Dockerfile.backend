@@ -52,7 +52,7 @@ RUN grep -q '"packageManager": "pnpm@11.23.0"' package.json \
 # reachable only via devDependencies, i.e. packages/ts-config, which
 # apps/backend/tsconfig.json extends by relative path. devDependencies are
 # dropped at install time instead.
-RUN turbo prune backend --docker
+RUN turbo prune @crm/backend --docker
 
 # ---------------------------------------------------------------------------
 # Stage 2: install production dependencies against the pruned lockfile.

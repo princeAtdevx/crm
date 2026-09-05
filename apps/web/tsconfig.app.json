@@ -4,8 +4,9 @@
 	// preset, so this file holds only what is genuinely app-specific.
 	"extends": "@crm/ts-config/react-app.json",
 	"compilerOptions": {
-		// import.meta.env and the asset module declarations.
-		"types": ["vite/client"]
+		// vite/client for import.meta.env and the asset module declarations;
+		// the other two for the test suite (see packages/ui/tsconfig.json).
+		"types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
 	},
 	"include": ["src"]
 }

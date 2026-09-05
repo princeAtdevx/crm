@@ -1,15 +1,20 @@
-import tsconfigPaths from 'vite-tsconfig-paths';
-import { defineConfig } from 'vitest/config';
+import node from '@crm/vitest-config/node';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default defineConfig({
-	plugins: [tsconfigPaths()],
-	// @crm/db and @crm/utils are published as TypeScript source (no build), so
-	// Vite must transform them rather than externalising them to Node's
-	// resolver.
-	ssr: { noExternal: ['@crm/db', '@crm/utils'] },
-	test: {
-		globals: true,
-		root: './',
-		include: ['**/*.e2e-spec.ts'],
-	},
-});
+export default mergeConfig(
+	node,
+	defineConfig({
+		test: {
+			// Scoped to test/ rather than the old '**/*.e2e-spec.ts', which
+			// walked the whole workspace on every run.
+			include: ['test/**/*.e2e-spec.ts'],
+
+			// Boots the real AppModule against the crm_test database.
+			// `pnpm dev:db:start && pnpm dev:db:migrate:test` first.
+			fileParallelism: false,
+			pool: 'forks',
+			testTimeout: 30_000,
+			hookTimeout: 30_000,
+		},
+	}),
+);
