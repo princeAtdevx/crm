@@ -89,7 +89,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm exec turbo run lint --filter=backend
+        run: pnpm exec turbo run lint --filter=@crm/backend
 
   check-types:
     name: Check types
@@ -110,7 +110,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check types
-        run: pnpm exec turbo run check-types --filter=backend
+        run: pnpm exec turbo run check-types --filter=@crm/backend
 
   test:
     name: Unit test
@@ -138,7 +138,7 @@ jobs:
       # DB-backed **/*.e2e-spec.ts suite runs separately below, against a
       # real Postgres service container.
       - name: Unit test
-        run: pnpm --filter backend run test
+        run: pnpm --filter @crm/backend run test
 
   test-e2e:
     name: E2E test
@@ -177,17 +177,17 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # drizzle.config.ts only loads the repo-root .env.local/.env (see
-      # packages/db/drizzle.config.ts), never apps/backend/.env.test, so
+      # packages/db/drizzle.config.ts), never .env.test, so
       # DATABASE_URL must be passed explicitly here -- same
-      # host/port/db as the postgres service above and as
-      # apps/backend/.env.test (which the e2e suite itself reads).
+      # host/port/db as the postgres service above and as the
+      # repo-root .env.test (which the e2e suite itself reads).
       - name: Run migrations
         run: pnpm --filter @crm/db run db:migrate
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/crm_test
 
       - name: E2E test
-        run: pnpm --filter backend run test:e2e
+        run: pnpm --filter @crm/backend run test:e2e
 
   docker-build:
     name: Docker build
