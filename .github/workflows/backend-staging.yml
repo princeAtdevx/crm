@@ -195,12 +195,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # apps/backend/.env.test points DATABASE_URL at this exact
-      # host/port/db (postgresql://postgres:postgres@localhost:5432/crm_test)
-      # and vitest sets NODE_ENV=test automatically, so no env overrides are
-      # needed here -- only the schema needs to exist before the suite runs.
+      # drizzle.config.ts only loads the repo-root .env.local/.env (see
+      # packages/db/drizzle.config.ts), never apps/backend/.env.test, so
+      # DATABASE_URL must be passed explicitly here -- same
+      # host/port/db as the postgres service above and as
+      # apps/backend/.env.test (which the e2e suite itself reads).
       - name: Run migrations
         run: pnpm --filter @crm/db run db:migrate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/crm_test
 
       - name: E2E test
         run: pnpm --filter backend run test:e2e
