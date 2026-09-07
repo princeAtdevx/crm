@@ -1,6 +1,6 @@
 # One job per workspace, so a failure names the app that broke rather than the
 # repo. Mirrors what lefthook runs on pre-push (check-types, biome, unit tests)
-# and adds the two suites that need a database.
+# and adds @crm/db's integration suite, which needs a database.
 name: CI
 
 on:
@@ -84,9 +84,14 @@ jobs:
       - run: pnpm run ci
 
   # ------------------------------------------------------ database-backed ----
-  # Not matrix entries: these need a service container, and keeping them
-  # separate means the DB-free matrix above still reports when Postgres is the
-  # thing that is broken.
+  # Not a matrix entry: it needs a service container, and keeping it separate
+  # means the DB-free matrix above still reports when Postgres is the thing
+  # that is broken.
+  #
+  # @crm/backend's e2e suite is NOT run here on purpose -- backend-staging.yml
+  # and backend-production.yml already run it, path-scoped to backend-relevant
+  # changes. Keeping it here too would just spin up a second Postgres service
+  # and re-run the same migration + suite for zero extra coverage.
   test-integration:
     name: test:integration (@crm/db)
     runs-on: ubuntu-latest
@@ -125,37 +130,3 @@ jobs:
       - name: Apply migrations
         run: pnpm --filter @crm/db db:migrate
       - run: pnpm turbo run test:integration --filter=@crm/db
-
-  test-e2e:
-    name: test:e2e (@crm/backend)
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:18-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: crm_test
-        options: >-
-          --health-cmd "pg_isready -U postgres -d crm_test"
-          --health-interval 2s
-          --health-timeout 5s
-          --health-retries 30
-          --shm-size=256m
-        ports:
-          - 5432:5432
-    env:
-      # The repo-root .env.test already points here; set explicitly so the job
-      # does not depend on dotenv precedence.
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/crm_test
-    steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Apply migrations
-        run: pnpm --filter @crm/db db:migrate
-      - run: pnpm turbo run test:e2e --filter=@crm/backend

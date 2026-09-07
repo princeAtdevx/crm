@@ -1,0 +1,7 @@
+# Copy to backend.tfvars (gitignored) and fill in the bucket/table names
+# output by `terraform apply` in infra/bootstrap. Use with:
+#   terraform init -backend-config=backend.tfvars
+
+bucket         = "REPLACE_WITH_UNIQUE_NAME-crm-terraform-state"
+region         = "ap-south-1"
+dynamodb_table = "crm-terraform-locks"
