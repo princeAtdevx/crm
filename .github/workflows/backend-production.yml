@@ -1,0 +1,452 @@
+# CI + CD for apps/backend (NestJS on Bun) -- PRODUCTION stage.
+#
+# Fully self-contained: this file owns its own lint/check-types/test/e2e-test
+# /docker-build AND its own deploy, independently of backend-staging.yml. The
+# two are deliberately not shared -- production and staging may end up on
+# different AWS architectures (task sizing, service count, whether a worker
+# service even exists yet), and coupling their pipelines through shared jobs
+# would make that divergence harder, not easier. Duplication between this
+# file and backend-staging.yml is accepted on purpose; keep them in sync by
+# hand when CI steps change, don't reach for a shared workflow_call unless
+# the two architectures re-converge.
+#
+# Deploy only runs on push to main, after this file's own CI passes, and goes
+# through three jobs in sequence: push-image (build + push the api/worker
+# image to ECR) -> migrate (run packages/db/src/migrate.ts as a one-off ECS
+# Fargate task, using that SAME image, inside the VPC) -> deploy (update the
+# API and worker ECS services, also from that same image) -- gated by
+# `needs:` so a failed migration blocks the deploy entirely; broken app code
+# never reaches a schema it doesn't match, and a botched migration never
+# gets new code pointed at it.
+#
+# migrate.ts uses drizzle-orm's migrator directly instead of the drizzle-kit
+# CLI, deliberately: drizzle-orm and pg are real dependencies and survive
+# `pnpm install --prod` (see docker/Dockerfile.backend), so the SAME image
+# that becomes the API/worker tasks can also run migrations -- no second
+# image, no extra ECR tag, no devDependencies in any running container. The
+# migration task shares the API's VPC, security group, and
+# Secrets-Manager-injected DATABASE_URL, so RDS never needs to be reachable
+# from outside the VPC.
+#
+# This is boilerplate: no real AWS account is wired up yet. Before this can
+# deploy anything, set the variables and secret listed next to each job
+# below, on the "production" GitHub Environment.
+#
+# pnpm installs (matches the lockfile + catalog), Bun runs (backend has no
+# build step -- Bun executes src/main.ts as TypeScript directly, per
+# docker/Dockerfile.backend). Both toolchains are set up in every job that
+# touches the workspace outside the Docker build, which is self-contained.
+
+name: backend-production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/backend/**"
+      - "packages/db/**"
+      - "packages/ts-config/**"
+      - "docker/Dockerfile.backend"
+      - ".aws/task-definition.api.production.json"
+      - ".aws/task-definition.worker.production.json"
+      - ".aws/task-definition.migrate.production.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "biome.jsonc"
+      - ".github/workflows/backend-production.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: backend-production-${{ github.ref }}
+  cancel-in-progress: false # never cancel a production deploy mid-flight
+
+env:
+  # Kept in sync manually with root package.json (packageManager) and
+  # docker/Dockerfile.backend's BUN_VERSION -- there is no single source both
+  # a Dockerfile ARG and a workflow env block can read.
+  PNPM_VERSION: "11.23.0"
+  BUN_VERSION: "1.4.0"
+  NODE_VERSION: "24"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec turbo run lint --filter=@crm/backend
+
+  check-types:
+    name: Check types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check types
+        run: pnpm exec turbo run check-types --filter=@crm/backend
+
+  test:
+    name: Unit test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # vitest.config.ts includes only **/*.spec.ts (unit specs). The
+      # DB-backed **/*.e2e-spec.ts suite runs separately below, against a
+      # real Postgres service container.
+      - name: Unit test
+        run: pnpm --filter @crm/backend run test
+
+  test-e2e:
+    name: E2E test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: crm_test
+        options: >-
+          --health-cmd "pg_isready -U postgres -d crm_test"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+          --shm-size=256m
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # drizzle.config.ts only loads the repo-root .env.local/.env (see
+      # packages/db/drizzle.config.ts), never .env.test, so
+      # DATABASE_URL must be passed explicitly here -- same
+      # host/port/db as the postgres service above and as the
+      # repo-root .env.test (which the e2e suite itself reads).
+      - name: Run migrations
+        run: pnpm --filter @crm/db run db:migrate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/crm_test
+
+      - name: E2E test
+        run: pnpm --filter @crm/backend run test:e2e
+
+  docker-build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    needs: [lint, check-types, test, test-e2e]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Validates the image builds at all. Not pushed anywhere here -- only
+      # the deploy job pushes to ECR, using the same Dockerfile.
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.backend
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  push-image:
+    name: Push image to ECR
+    runs-on: ubuntu-latest
+    needs: [docker-build]
+    environment: production
+    permissions:
+      id-token: write # required for OIDC -> AWS role assumption
+      contents: read
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # --- Boilerplate only below this line --------------------------------
+      # Nothing here is wired to a real AWS account yet. Before this job can
+      # run successfully:
+      #
+      #   1. Create an IAM OIDC provider for token.actions.githubusercontent.com
+      #      (shared with other workflows if they're in the same AWS account --
+      #      one provider per account, not per repo/workflow).
+      #   2. Create an IAM role that trusts this repo via that provider, scoped
+      #      to `repo:<org>/<repo>:ref:refs/heads/main`, with permission to
+      #      push to the production ECR repository ONLY.
+      #   3. Create the production ECR repository.
+      #   4. Set variables on the "production" GitHub Environment (Settings ->
+      #      Environments -> production -> Variables): AWS_REGION,
+      #      AWS_ECR_REPOSITORY.
+      #   5. Set a secret on the "production" GitHub Environment:
+      #      AWS_DEPLOY_ROLE_ARN.
+      #
+      # Until then this job will fail at "Configure AWS credentials" -- that
+      # is expected for boilerplate with no target account.
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - uses: docker/setup-buildx-action@v3
+
+      # One image, tagged by commit SHA, reused by both ECS services below.
+      # They differ only in the `command` their task definitions set at
+      # deploy time -- not in the image itself.
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.backend
+          push: true
+          tags: |
+            ${{ steps.ecr-login.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}:${{ github.sha }}
+            ${{ steps.ecr-login.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - id: image
+        run: echo "image=${{ steps.ecr-login.outputs.registry }}/${{ vars.AWS_ECR_REPOSITORY }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+  migrate:
+    name: Run migration task
+    runs-on: ubuntu-latest
+    needs: [push-image]
+    environment: production
+    permissions:
+      id-token: write # required for OIDC -> AWS role assumption
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+
+      # --- Boilerplate only below this line --------------------------------
+      # Nothing here is wired to a real AWS account yet. Before this job can
+      # run successfully:
+      #
+      #   1. Create the RDS instance (production stage) and a Secrets
+      #      Manager secret holding its DATABASE_URL, matching the ARN
+      #      already referenced by .aws/task-definition.migrate.production.json
+      #      (same secret the API/worker task definitions already use).
+      #   2. Register .aws/task-definition.migrate.production.json's
+      #      execution/task role, VPC subnets, and security group: this task
+      #      must run INSIDE the same VPC as RDS (the same subnets/security
+      #      group as the API task work here), with a security group allowed
+      #      into RDS's port 5432 -- RDS itself should never be publicly
+      #      reachable. This is why migration runs as an ECS task rather than
+      #      a step against RDS directly from GitHub's runners.
+      #   3. Reuse the OIDC role from push-image, or a dedicated one -- either
+      #      way it needs permission to register-task-definition, run-task,
+      #      and describe-tasks against the production ECS cluster.
+      #   4. Set variables on the "production" GitHub Environment: in
+      #      addition to the ones push-image/deploy need, AWS_ECS_CLUSTER
+      #      (shared with deploy), AWS_VPC_SUBNETS (comma-separated),
+      #      AWS_VPC_SECURITY_GROUP.
+      #
+      # Until then this job will fail at "Configure AWS credentials" -- that
+      # is expected for boilerplate with no target account.
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Render migration task definition
+        id: render-migrate
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/task-definition.migrate.production.json
+          container-name: migrate
+          image: ${{ needs.push-image.outputs.image }}
+
+      - name: Register migration task definition
+        id: register-migrate
+        run: |
+          TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://${{ steps.render-migrate.outputs.task-definition }} \
+            --query 'taskDefinition.taskDefinitionArn' --output text)
+          echo "task-def-arn=$TASK_DEF_ARN" >> "$GITHUB_OUTPUT"
+
+      # There is no built-in GitHub Action for "run a one-off ECS task and
+      # wait for its exit code" -- run-task starts it, `ecs tasks-stopped`
+      # (a waiter, not a single call) blocks until it stops for any reason,
+      # and the exit code has to be pulled from describe-tasks and checked
+      # by hand. A non-zero/missing exit code fails this step, which fails
+      # this job, which blocks `deploy` below via `needs: [migrate]`.
+      - name: Run migration task and wait for completion
+        run: |
+          TASK_ARN=$(aws ecs run-task \
+            --cluster "${{ vars.AWS_ECS_CLUSTER }}" \
+            --task-definition "${{ steps.register-migrate.outputs.task-def-arn }}" \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=[${{ vars.AWS_VPC_SUBNETS }}],securityGroups=[${{ vars.AWS_VPC_SECURITY_GROUP }}],assignPublicIp=DISABLED}" \
+            --query 'tasks[0].taskArn' --output text)
+
+          echo "Migration task: $TASK_ARN"
+
+          aws ecs wait tasks-stopped \
+            --cluster "${{ vars.AWS_ECS_CLUSTER }}" \
+            --tasks "$TASK_ARN"
+
+          EXIT_CODE=$(aws ecs describe-tasks \
+            --cluster "${{ vars.AWS_ECS_CLUSTER }}" \
+            --tasks "$TASK_ARN" \
+            --query 'tasks[0].containers[0].exitCode' --output text)
+
+          echo "Migration task exit code: $EXIT_CODE"
+
+          if [ "$EXIT_CODE" != "0" ]; then
+            echo "Migration failed (exit code $EXIT_CODE) -- see CloudWatch log group /ecs/crm-backend-migrate-production for details. Deploy blocked."
+            exit 1
+          fi
+
+  deploy:
+    name: Deploy ECS services
+    runs-on: ubuntu-latest
+    needs: [migrate, push-image]
+    environment: production
+    permissions:
+      id-token: write # required for OIDC -> AWS role assumption
+      contents: read
+    steps:
+      # --- Boilerplate only below this line --------------------------------
+      # Nothing here is wired to a real AWS account yet. Before this job can
+      # run successfully:
+      #
+      #   1. Create the ECS cluster and two ECS services (API, worker). The
+      #      task definition template for each already exists at
+      #      .aws/task-definition.api.production.json and
+      #      .aws/task-definition.worker.production.json -- both reference
+      #      the SAME image (swapped in at deploy time by
+      #      render-task-definition below) but override `command`
+      #      (`bun src/main.ts` for API). The worker template's command is
+      #      still a placeholder: no worker/BullMQ entrypoint exists in
+      #      apps/backend yet, so fill that in (and the ARN/region
+      #      placeholders marked REPLACE_*) once it does.
+      #   2. The app exposes no /health route (see docker/Dockerfile.backend's
+      #      HEALTHCHECK, which falls back to GET /) -- add one before wiring
+      #      an ALB target group health check or ECS deployment circuit
+      #      breaker against it.
+      #   3. Set variables on the "production" GitHub Environment (Settings ->
+      #      Environments -> production -> Variables): AWS_ECS_API_SERVICE,
+      #      AWS_ECS_WORKER_SERVICE (AWS_REGION, AWS_ECR_REPOSITORY,
+      #      AWS_ECS_CLUSTER already needed by earlier jobs).
+      #
+      # Until then this job will fail at "Configure AWS credentials" -- that
+      # is expected for boilerplate with no target account.
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # `ecs update-service --force-new-deployment` on its own does NOT pick
+      # up a new image -- it just recycles tasks against whichever task
+      # definition revision the service is already pinned to. The new image
+      # tag has to reach ECS via a new task definition revision, which is
+      # what render + register do below; the deploy-task-definition action
+      # then points the service at that revision.
+      - name: Render API task definition
+        id: render-api
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/task-definition.api.production.json
+          container-name: api
+          image: ${{ needs.push-image.outputs.image }}
+
+      - name: Deploy API service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-api.outputs.task-definition }}
+          cluster: ${{ vars.AWS_ECS_CLUSTER }}
+          service: ${{ vars.AWS_ECS_API_SERVICE }}
+          wait-for-service-stability: true
+
+      # Same image, rendered into the worker's task definition, which
+      # overrides `command` instead of `portMappings` -- see
+      # .aws/task-definition.worker.production.json. This step -- and the
+      # AWS_ECS_WORKER_SERVICE variable it reads -- stays a placeholder until
+      # a worker service and a real worker entrypoint exist (see item 1 in
+      # the setup checklist above): there is no BullMQ worker code in
+      # apps/backend yet.
+      - name: Render worker task definition
+        id: render-worker
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/task-definition.worker.production.json
+          container-name: worker
+          image: ${{ needs.push-image.outputs.image }}
+
+      - name: Deploy worker service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-worker.outputs.task-definition }}
+          cluster: ${{ vars.AWS_ECS_CLUSTER }}
+          service: ${{ vars.AWS_ECS_WORKER_SERVICE }}
+          wait-for-service-stability: true
